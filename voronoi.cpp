@@ -51,46 +51,70 @@ struct compare_events {
     }
 };
 
-// Event queues
-// Instead of only one queue for both events, we are using
-// two, one for each "type" of event. Because of this,
-// we will only need to compare the first element of each queue.
-priority_queue<site, vector<site>, compare_events> sites;
-priority_queue<circle*, vector<circle*>, compare_events> circles;
+class Voronoi {
+    public:
+        // Event queues
+        // Instead of only one queue for both events, we are using
+        // two, one for each "type" of event. Because of this,
+        // we will only need to compare the first element of each queue.
+        priority_queue<site, vector<site>, compare_events> sites;
+        priority_queue<circle*, vector<circle*>, compare_events> circles;
 
-void handle_site_event() {
-    
-}
+        void push(site p) {
+            sites.push(p);
+        }
 
-void handle_circle_event() {
-    
-}
+        void handle_site_event() {
+            while(!sites.empty()) {
+                cout << sites.top().x << " " << sites.top().y << endl;
+                sites.pop();
+            }
+        }
+
+        void handle_circle_event() {
+            
+        }
+
+        void compute() {
+
+            // While queues are not empty
+            while (!sites.empty() || !circles.empty()) {
+                if (!sites.empty() && !circles.empty()) {
+                    if (sites.top().y > circles.top()->lowest) {
+                        handle_site_event();
+                    }
+                    else {
+                        handle_circle_event();
+                    }
+                }
+                else if (!sites.empty()) {
+                    handle_site_event();
+                }
+                else {
+                    handle_circle_event();
+                }
+            }
+        }
+
+};
 
 int main() {
+    // Utilization example
+
+    // Create voronoi object
+    Voronoi voronoi;
+
+    // Read the points from the file
     ifstream f("points.txt");
     site p;
 
     // Initialize site event queue
     while (f >> p.x >> p.y) {
-        sites.push(p);
+        voronoi.push(p);
     }
 
-    // While queues are not empty
-    while (!sites.empty() || !circles.empty()) {
-        if (!sites.empty() && !circles.empty()) {
-            if (sites.top().y > circles.top()->lowest) {
-                handle_site_event();
-            }
-            else {
-                handle_circle_event();
-            }
-        }
-        else if (!sites.empty()) {
-            handle_site_event();
-        }
-        else {
-            handle_circle_event();
-        }
-    }
+    // Compute the Voronoi diagram
+    voronoi.compute();
+
     return 0;
 }
