@@ -52,27 +52,28 @@ struct compare_events {
 };
 
 class Voronoi {
-    public:
-        // Event queues
-        // Instead of only one queue for both events, we are using
-        // two, one for each "type" of event. Because of this,
-        // we will only need to compare the first element of each queue.
-        priority_queue<site, vector<site>, compare_events> sites;
-        priority_queue<circle*, vector<circle*>, compare_events> circles;
+    // Event queues
+    // Instead of only one queue for both events, we are using
+    // two, one for each "type" of event. Because of this,
+    // we will only need to compare the first element of each queue.
+    priority_queue<site, vector<site>, compare_events> sites;
+    priority_queue<circle*, vector<circle*>, compare_events> circles;
 
+
+    void handle_site_event() {
+        while(!sites.empty()) {
+            cout << sites.top().x << " " << sites.top().y << endl;
+            sites.pop();
+        }
+    }
+
+    void handle_circle_event() {
+        
+    }
+    
+    public:
         void push(site p) {
             sites.push(p);
-        }
-
-        void handle_site_event() {
-            while(!sites.empty()) {
-                cout << sites.top().x << " " << sites.top().y << endl;
-                sites.pop();
-            }
-        }
-
-        void handle_circle_event() {
-            
         }
 
         void compute() {
