@@ -15,17 +15,26 @@ struct point {
 typedef point site;
 
 struct circle;
+struct vertex;
 
-struct seg {
-    point start, end;
+struct halfedge {
+    vertex *origin;
+    halfedge *prev, *next;
+    halfedge *twin;
+};
+
+struct vertex {
+    point p;
+    halfedge *he;
 };
 
 struct arc {
     site s;
     circle *c;
     arc *prev, *next;
-    seg *l, *r;
+    halfedge *s0, *s1;
 };
+
 struct circle{
     double lowest;
     arc *a;
