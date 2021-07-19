@@ -8,41 +8,41 @@ using namespace std;
 //  - degenerate case when two sites have the same y coord;
 //  - degenerate case when circle and site have the same y coord;
 
-struct point {
+struct Point {
     double x, y;
 };
 
-typedef point site;
+typedef Point Site;
 
-struct circle;
-struct vertex;
+struct Circle;
+struct Vertex;
 
-struct halfedge {
-    vertex *origin;
-    halfedge *prev, *next;
-    halfedge *twin;
+struct Halfedge {
+    Vertex *origin;
+    Halfedge *prev, *next;
+    Halfedge *twin;
 };
 
-struct vertex {
-    point p;
-    halfedge *he;
+struct Vertex {
+    Point p;
+    Halfedge *he;
 };
 
-struct arc {
-    site s;
-    circle *c;
-    arc *prev, *next;
-    halfedge *s0, *s1;
+struct Arc {
+    Site s;
+    Circle *c;
+    Arc *prev, *next;
+    Halfedge *s0, *s1;
 };
 
-struct circle{
+struct Circle {
     double lowest;
-    arc *a;
+    Arc *a;
     bool valid;
 };
 
-struct compare_events {
-    bool operator()(site a, site b) {
+struct CompareEvents {
+    bool operator()(Site a, Site b) {
         if (a.y < b.y) {
             return true;
         }
@@ -50,7 +50,7 @@ struct compare_events {
             return false;
         }
     }
-    bool operator()(circle *a, circle *b) {
+    bool operator()(Circle *a, Circle *b) {
         if (a->lowest < b->lowest) {
             return true;
         }
@@ -65,23 +65,23 @@ class Voronoi {
     // Instead of only one queue for both events, we are using
     // two, one for each "type" of event. Because of this,
     // we will only need to compare the first element of each queue.
-    priority_queue<site, vector<site>, compare_events> sites;
-    priority_queue<circle*, vector<circle*>, compare_events> circles;
+    priority_queue<Site, vector<Site>, CompareEvents> sites;
+    priority_queue<Circle*, vector<Circle*>, CompareEvents> circles;
+    
 
-
-    void handle_site_event() {
+    void handleSiteEvent() {
         while(!sites.empty()) {
             cout << sites.top().x << " " << sites.top().y << endl;
             sites.pop();
         }
     }
 
-    void handle_circle_event() {
+    void handleCircleEvent() {
         
     }
     
     public:
-        void push(site p) {
+        void push(Site p) {
             sites.push(p);
         }
 
@@ -91,17 +91,17 @@ class Voronoi {
             while (!sites.empty() || !circles.empty()) {
                 if (!sites.empty() && !circles.empty()) {
                     if (sites.top().y > circles.top()->lowest) {
-                        handle_site_event();
+                        handleSiteEvent();
                     }
                     else {
-                        handle_circle_event();
+                        handleCircleEvent();
                     }
                 }
                 else if (!sites.empty()) {
-                    handle_site_event();
+                    handleSiteEvent();
                 }
                 else {
-                    handle_circle_event();
+                    handleCircleEvent();
                 }
             }
         }
@@ -116,7 +116,7 @@ int main() {
 
     // Read the points from the file
     ifstream f("points.txt");
-    site p;
+    Site p;
 
     // Initialize site event queue
     while (f >> p.x >> p.y) {
