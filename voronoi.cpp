@@ -277,10 +277,10 @@ class Voronoi {
         cout << endl;
     }
 
-    void deleteArc(Arc *a, Arc *aNext) {
+    void deleteArc(Arc *a, Arc **aNext) {
         a->prev->next = a->next;
         a->next->prev = a->prev;
-        aNext = a->next;
+        *aNext = a->next;
         delete a;
     }
 
@@ -300,12 +300,12 @@ class Voronoi {
             // Save pointer to next arc, because this one
             // will be deleted.
             Arc *aNext;
-            deleteArc(c->a, aNext);
+            deleteArc(c->a, &aNext);
 
             // Invalidate circle events from successor and predecessor.
-            aNext->c->valid = false;
+            if (aNext->c) aNext->c->valid = false;
             aNext->c = nullptr;
-            aNext->prev->c->valid = false;
+            if (aNext->prev->c) aNext->prev->c->valid = false;
             aNext->prev->c = nullptr;
         }
     }
