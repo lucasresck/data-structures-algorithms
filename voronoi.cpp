@@ -142,7 +142,7 @@ class Voronoi {
     Arc* insertArc(Arc *a, Site p) {
         // Copy a to b
         Arc *b = new Arc(a->s);
-        b->c = a->c;
+        // b->c = a->c;
         b->prev = a->prev;
         b->next = a->next;
         b->s0 = a->s0;
@@ -277,8 +277,37 @@ class Voronoi {
         cout << endl;
     }
 
+    void deleteArc(Arc *a, Arc *aNext) {
+        a->prev->next = a->next;
+        a->next->prev = a->prev;
+        aNext = a->next;
+        delete a;
+    }
+
     void handleCircleEvent() {
-        cout << "Handling circle event: ";        
+        // Get next event and erase it
+        Circle *c = circles.top();
+        circles.pop();
+
+        // There are some circle events in the priority queue
+        // which are not valid. We did not remove them because
+        // we are dealing with a priority queue, so we just
+        // invalidated them.
+        if (c->valid) {
+            cout << "Handling circle event: ";
+            cout << c->a->s.x << " " << c->lowest << endl;
+
+            // Save pointer to next arc, because this one
+            // will be deleted.
+            Arc *aNext;
+            deleteArc(c->a, aNext);
+
+            // Invalidate circle events from successor and predecessor.
+            aNext->c->valid = false;
+            aNext->c = nullptr;
+            aNext->prev->c->valid = false;
+            aNext->prev->c = nullptr;
+        }
     }
     
     public:
