@@ -109,8 +109,7 @@ class Voronoi {
         if (arc->prev) { x1 = calculateIntersection(arc, arc->prev, p.y); }
         if (arc->next) { x2 = calculateIntersection(arc->next, arc, p.y); }
 
-        cout << x1 << " " << x2 << endl;
-        cout << arc->next << endl;
+        cout << "Intersection: " << x1 << " " << x2 << endl;
 
         // Verify if p.x is between both intersections
         // That is, if p intercept arc
@@ -123,9 +122,8 @@ class Voronoi {
     Arc* findIntersection(Site p) {
         // Iterate over the beach line
         for (Arc *arcIt = arcRoot; arcIt; arcIt = arcIt->next) {
-            cout << arcIt << endl;
             if (doesIntersect(arcIt, p)) {
-                cout << "Intersect! " << arcIt->s.x << endl;
+                cout << "Intersect with arc with site: " << arcIt->s.x << " " << arcIt->s.y << endl;
                 return arcIt;
             }
         }
@@ -212,6 +210,7 @@ class Voronoi {
             if (arc->next->next) {
                 if (doesConverge(arc->s, arc->next->s, arc->next->next->s)) {
                     double lowest = calculateLowest(arc->s, arc->next->s, arc->next->next->s);
+                    cout << "Circle event: " << arc->next->s.x << " " << lowest << endl;
                     Circle *c = new Circle(lowest, arc->next);
                     arc->next->c = c;
                     circles.push(c);
@@ -224,6 +223,7 @@ class Voronoi {
             if (arc->prev->prev) {
                 if (doesConverge(arc->prev->prev->s, arc->prev->s, arc->s)) {
                     double lowest = calculateLowest(arc->prev->prev->s, arc->prev->s, arc->s);
+                    cout << "Circle event found: " << arc->prev->s.x << " " << lowest << endl;
                     Circle *c = new Circle(lowest, arc->prev);
                     arc->prev->c = c;
                     circles.push(c);
@@ -233,20 +233,19 @@ class Voronoi {
     }
 
     void handleSiteEvent() {
-        cout << "Handling site event" << endl;
+        cout << "Handling site event: ";
         // Get next event and erase it
         Site p = sites.top();
         sites.pop();
+        cout << p.x << " " << p.y << endl;
 
         // If the linked list is empty
         if (arcRoot == nullptr) {
-            cout << "Empty linked list" << endl;
+            cout << "Empty linked list. Adding first arc." << endl;
             arcRoot = new Arc(p);
         }
         else {
             Arc *a = findIntersection(p);
-
-            cout << a->c << endl;
 
             // If the arc has a circle event
             // it is a false alarm
@@ -268,6 +267,7 @@ class Voronoi {
             // Check the "new circles" for convergence.
             checkCircles(newArc);
         }
+        cout << endl;
     }
 
     void handleCircleEvent() {
