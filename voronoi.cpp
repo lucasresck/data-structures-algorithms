@@ -35,6 +35,8 @@ struct Arc {
     Circle *c;
     Arc *prev, *next;
     Halfedge *s0, *s1;
+
+    Arc(Site s) : s(s), c(NULL), prev(NULL), next(NULL), s0(NULL), s1(NULL) {};
 };
 
 struct Circle {
@@ -71,7 +73,7 @@ class Voronoi {
     priority_queue<Circle*, vector<Circle*>, CompareEvents> circles;
 
     // Beginning of linked list
-    Arc *arcRoot;
+    Arc *arcRoot = nullptr;
 
     double calculateIntersection(Arc *arc0, Arc *arc1, double l) {
         // Capture (x, y) for each parabola arc
@@ -98,8 +100,11 @@ class Voronoi {
     bool doesIntersect(Arc *arc, Point p) {
         // Calculate x intersection of arc with prev and next
         double x1, x2;
-        if (arc->prev) { x1 = calculateIntersection(arc->prev, arc, p.y); }
-        if (arc->next) { x2 = calculateIntersection(arc, arc->next, p.y); }
+        if (arc->prev) { x1 = calculateIntersection(arc, arc->prev, p.y); }
+        if (arc->next) { x2 = calculateIntersection(arc->next, arc, p.y); }
+
+        cout << x1 << " " << x2 << endl;
+        cout << arc->next << endl;
 
         // Verify if p.x is between both intersections
         // That is, if p intercept arc
@@ -112,24 +117,60 @@ class Voronoi {
     Arc* findIntersection(Site p) {
         // Iterate over the beach line
         for (Arc *arcIt = arcRoot; arcIt; arcIt = arcIt->next) {
+            cout << arcIt << endl;
             if (doesIntersect(arcIt, p)) {
+                cout << "Intersect! " << arcIt->s.x << endl;
                 return arcIt;
             }
         }
+        return nullptr;
+    }
+
+    void insertInFrontOf(Arc *a, Arc *b) {
+        b->next = a->next;
+        b->prev = a;
+        if (a->next) { a->next->prev = b; }
+        a->next = b;
+    }
+
+    void insertArc(Arc *a, Site p) {
+        // Copy a to b
+        Arc *b = new Arc(a->s);
+        b->c = a->c;
+        b->prev = a->prev;
+        b->next = a->next;
+        b->s0 = a->s0;
+        b->s1 = a->s1;
+
+        insertInFrontOf(a, b);
+
+        // Create our new arc and insert it
+        Arc* newArc = new Arc(p);
+        insertInFrontOf(a, newArc);
     }
 
     void handleSiteEvent() {
+        cout << "Handling site event" << endl;
         // Get next event and erase it
         Site p = sites.top();
         sites.pop();
 
         // If the linked list is empty
         if (arcRoot == nullptr) {
-            arcRoot = new Arc;
-            arcRoot->s = p;
+            cout << "Empty linked list" << endl;
+            arcRoot = new Arc(p);
         }
         else {
             Arc *a = findIntersection(p);
+
+            cout << a->c << endl;
+
+            // If the arc has a circle event
+            // it is a false alarm
+            if (a->c) a->c->valid = false;
+            a->c = nullptr;
+
+            insertArc(a, p);
         }
     }
 
