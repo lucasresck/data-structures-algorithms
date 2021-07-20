@@ -45,6 +45,8 @@ struct Circle {
     double lowest;
     Arc *a;
     bool valid;
+
+    Circle(double lowest, Arc *a) : valid(true) {};
 };
 
 struct CompareEvents {
@@ -154,6 +156,82 @@ class Voronoi {
         return newArc;
     }
 
+    bool doesConverge(Site p, Site q, Site r) {
+        // Check left turn of p, q, r
+        double D = q.x*r.y + p.x*q.y + p.y*r.x
+                - (p.y*q.x + q.y*r.x + r.y*p.x);
+        return D < 0;
+    }
+
+    double calculateLowest(Site p, Site q, Site r) {
+        // Calculate lowest point of a circle
+        // containing p, q, and r.
+        // Source: https://www.geeksforgeeks.org/equation-of-circle-when-three-points-on-the-circle-are-given/
+
+        double  x1 = p.x, y1 = p.y, x2 = q.x,
+                y2 = q.y, x3 = r.x, y3 = r.y;
+
+        double x12 = x1 - x2;
+        double x13 = x1 - x3;
+    
+        double y12 = y1 - y2;
+        double y13 = y1 - y3;
+    
+        double y31 = y3 - y1;
+        double y21 = y2 - y1;
+    
+        double x31 = x3 - x1;
+        double x21 = x2 - x1;
+    
+        double sx13 = pow(x1, 2) - pow(x3, 2);    
+        double sy13 = pow(y1, 2) - pow(y3, 2);
+    
+        double sx21 = pow(x2, 2) - pow(x1, 2);
+        double sy21 = pow(y2, 2) - pow(y1, 2);
+    
+        double f = (sx13*x12 + sy13*x12 + sx21*x13 + sy21*x13)
+                    /(2*(y31*x12 - y21*x13));
+        double g = (sx13*y12 + sy13*y12 + sx21*y13 + sy21*y13)
+                    /(2*(x31*y12 - x21*y13));
+    
+        double c = -pow(x1, 2) - pow(y1, 2) - 2*g*x1 - 2*f*y1;
+
+        double h = -g;
+        double k = -f;
+        double r2 = h*h + k*k - c;
+    
+        double radius = sqrt(r2);
+
+        return k - radius;
+    }
+
+    void checkCircles(Arc *arc) {
+        // Check convergence of three breakpoints
+        // where arc is the left breakpoint
+        if (arc->next) {
+            if (arc->next->next) {
+                if (doesConverge(arc->s, arc->next->s, arc->next->next->s)) {
+                    double lowest = calculateLowest(arc->s, arc->next->s, arc->next->next->s);
+                    Circle *c = new Circle(lowest, arc->next);
+                    arc->next->c = c;
+                    circles.push(c);
+                }
+            }
+        }
+
+        // Check right
+        if (arc->prev) {
+            if (arc->prev->prev) {
+                if (doesConverge(arc->prev->prev->s, arc->prev->s, arc->s)) {
+                    double lowest = calculateLowest(arc->prev->prev->s, arc->prev->s, arc->s);
+                    Circle *c = new Circle(lowest, arc->prev);
+                    arc->prev->c = c;
+                    circles.push(c);
+                }
+            }
+        }
+    }
+
     void handleSiteEvent() {
         cout << "Handling site event" << endl;
         // Get next event and erase it
@@ -186,6 +264,9 @@ class Voronoi {
             he1->twin = he2;
             he2->twin = he1;
             halfedges.push_back(he1); halfedges.push_back(he2);
+
+            // Check the "new circles" for convergence.
+            checkCircles(newArc);
         }
     }
 
