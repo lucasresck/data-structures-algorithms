@@ -23,6 +23,8 @@ struct Halfedge {
     Vertex *origin;
     Halfedge *prev, *next;
     Halfedge *twin;
+
+    Halfedge() : origin(nullptr), prev(nullptr), next(nullptr), twin(nullptr) {};
 };
 
 struct Vertex {
@@ -36,7 +38,7 @@ struct Arc {
     Arc *prev, *next;
     Halfedge *s0, *s1;
 
-    Arc(Site s) : s(s), c(NULL), prev(NULL), next(NULL), s0(NULL), s1(NULL) {};
+    Arc(Site s) : s(s), c(nullptr), prev(nullptr), next(nullptr), s0(nullptr), s1(nullptr) {};
 };
 
 struct Circle {
@@ -71,6 +73,8 @@ class Voronoi {
     // we will only need to compare the first element of each queue.
     priority_queue<Site, vector<Site>, CompareEvents> sites;
     priority_queue<Circle*, vector<Circle*>, CompareEvents> circles;
+    vector<Halfedge*> halfedges;
+    vector<Vertex*> vertices;
 
     // Beginning of linked list
     Arc *arcRoot = nullptr;
@@ -133,7 +137,7 @@ class Voronoi {
         a->next = b;
     }
 
-    void insertArc(Arc *a, Site p) {
+    Arc* insertArc(Arc *a, Site p) {
         // Copy a to b
         Arc *b = new Arc(a->s);
         b->c = a->c;
@@ -147,6 +151,7 @@ class Voronoi {
         // Create our new arc and insert it
         Arc* newArc = new Arc(p);
         insertInFrontOf(a, newArc);
+        return newArc;
     }
 
     void handleSiteEvent() {
@@ -170,7 +175,17 @@ class Voronoi {
             if (a->c) a->c->valid = false;
             a->c = nullptr;
 
-            insertArc(a, p);
+            // Insert the new arc of site p into the beach line,
+            // splitting a into two elements in the linked list.
+            Arc* newArc = insertArc(a, p);
+
+            // Create new half edge records for the edge separating
+            // arc a and arc with site p, traced by the two new breakpoints.
+            Halfedge *he1 = newArc->s0 = newArc->prev->s1 = new Halfedge;
+            Halfedge *he2 = newArc->s1 = newArc->next->s0 = new Halfedge;
+            he1->twin = he2;
+            he2->twin = he1;
+            halfedges.push_back(he1); halfedges.push_back(he2);
         }
     }
 
