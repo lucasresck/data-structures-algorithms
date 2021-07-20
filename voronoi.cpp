@@ -45,8 +45,10 @@ struct Circle {
     double lowest;
     Arc *a;
     bool valid;
+    Point center;
 
-    Circle(double lowest, Arc *a) : valid(true) {};
+    Circle(double lowest, Arc *a, Point center) :
+    lowest(lowest), a(a), valid(true), center(center) {};
 };
 
 struct CompareEvents {
@@ -161,7 +163,7 @@ class Voronoi {
         return D < 0;
     }
 
-    double calculateLowest(Site p, Site q, Site r) {
+    double calculateLowest(Site p, Site q, Site r, Point *center) {
         // Calculate lowest point of a circle
         // containing p, q, and r.
         // Source: https://www.geeksforgeeks.org/equation-of-circle-when-three-points-on-the-circle-are-given/
@@ -200,6 +202,9 @@ class Voronoi {
     
         double radius = sqrt(r2);
 
+        center->x = h;
+        center->y = k;
+
         return k - radius;
     }
 
@@ -209,9 +214,10 @@ class Voronoi {
         if (arc->next) {
             if (arc->next->next) {
                 if (doesConverge(arc->s, arc->next->s, arc->next->next->s)) {
-                    double lowest = calculateLowest(arc->s, arc->next->s, arc->next->next->s);
+                    Point center;
+                    double lowest = calculateLowest(arc->s, arc->next->s, arc->next->next->s, &center);
                     cout << "Circle event: " << arc->next->s.x << " " << lowest << endl;
-                    Circle *c = new Circle(lowest, arc->next);
+                    Circle *c = new Circle(lowest, arc->next, center);
                     arc->next->c = c;
                     circles.push(c);
                 }
@@ -222,9 +228,10 @@ class Voronoi {
         if (arc->prev) {
             if (arc->prev->prev) {
                 if (doesConverge(arc->prev->prev->s, arc->prev->s, arc->s)) {
-                    double lowest = calculateLowest(arc->prev->prev->s, arc->prev->s, arc->s);
+                    Point center;
+                    double lowest = calculateLowest(arc->prev->prev->s, arc->prev->s, arc->s, &center);
                     cout << "Circle event found: " << arc->prev->s.x << " " << lowest << endl;
-                    Circle *c = new Circle(lowest, arc->prev);
+                    Circle *c = new Circle(lowest, arc->prev, center);
                     arc->prev->c = c;
                     circles.push(c);
                 }
@@ -271,7 +278,7 @@ class Voronoi {
     }
 
     void handleCircleEvent() {
-        
+        cout << "Handling circle event: ";        
     }
     
     public:
