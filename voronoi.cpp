@@ -10,14 +10,26 @@ using namespace std;
 //  - degenerate case when circle and site have the same y coord;
 //  - handle degeneracy when the point lies exactly bellow intersection between parabolas;
 
+/**
+ * 2D point, (x, y).
+ */
+
 struct Point {
     double x, y;
 };
+
+/**
+ * Site event for Voronoi algorithm.
+ */
 
 typedef Point Site;
 
 struct Circle;
 struct Vertex;
+
+/**
+ * Halfedge of DCEL.
+ */
 
 struct Halfedge {
     Vertex *origin;
@@ -27,10 +39,18 @@ struct Halfedge {
     Halfedge() : origin(nullptr), prev(nullptr), next(nullptr), twin(nullptr) {};
 };
 
+/**
+ * Vertex of DCEL.
+ */
+
 struct Vertex {
     Point p;
     Halfedge *he;
 };
+
+/**
+ * Parabola arc of Voronoi algorithm.
+ */
 
 struct Arc {
     Site s;
@@ -41,6 +61,10 @@ struct Arc {
     Arc(Site s) : s(s), c(nullptr), prev(nullptr), next(nullptr), s0(nullptr), s1(nullptr) {};
 };
 
+/**
+ * Circle event of Voronoi algorithm.
+ */
+
 struct Circle {
     double lowest;
     Arc *a;
@@ -50,6 +74,10 @@ struct Circle {
     Circle(double lowest, Arc *a, Point center) :
     lowest(lowest), a(a), valid(true), center(center) {};
 };
+
+/**
+ * Comparison of two Voronoi events by y coordinate.
+ */
 
 struct CompareEvents {
     bool operator()(Site a, Site b) {
@@ -70,7 +98,13 @@ struct CompareEvents {
     }
 };
 
+/**
+ * Voronoi algorithm implementation.
+ * Specifically, Fortune's algorithm.
+ */
+
 class Voronoi {
+
     // Event queues
     // Instead of only one queue for both events, we are using
     // two, one for each "type" of event. Because of this,
@@ -83,7 +117,17 @@ class Voronoi {
     // Beginning of linked list
     Arc *arcRoot = nullptr;
 
+    /**
+     * Calculate x coordinate of intersection between
+     * two parabola arcs.
+     * 
+     * @param arc0 Pointer to arc.
+     * @param arc1 Pointer to arc.
+     * @param l y coordinate of sweep line.
+     */
+
     double calculateIntersection(Arc *arc0, Arc *arc1, double l) {
+
         // Capture (x, y) for each parabola arc
         Point focus1 = arc1->s;
         double x1 = focus1.x;
@@ -99,11 +143,20 @@ class Voronoi {
         double b = -2*(x0*c1 - x1*c0);
         double c = x0*x0*c1 + y0*y0*c1 - x1*x1*c0 - y1*y1*c0 - l*l*(c1 - c0);
 
-        return (-b - sqrt(b*b - 4*a*c))/(2*a);
         // Recall that parabolas can intersect at two points.
         // However, considering only -b - sqrt(), and not
         // -b + sqrt(), is enough for our bussiness.
+        return (-b - sqrt(b*b - 4*a*c))/(2*a);
     }
+
+    /**
+     * Check if parabola arc is just above point p. We need to find
+     * which arc is above p, and this function check one
+     * specific arc.
+     * 
+     * @param arc Pointer to arc.
+     * @param p Point p.
+     */
 
     bool doesIntersect(Arc *arc, Point p) {
         // Calculate x intersection of arc with prev and next
@@ -120,6 +173,12 @@ class Voronoi {
         if ((!(arc->prev) || x1 <= p.x) && (!(arc->next) || p.x <= x2)) { return true; }
         else { return false; }
     }
+
+    /**
+     * Find the parabola arc that is just above site event p.
+     * 
+     * @param p Site event.
+     */
 
     Arc* findIntersection(Site p) {
         // Iterate over the beach line
@@ -139,6 +198,14 @@ class Voronoi {
         a->next = b;
     }
 
+    /**
+     * Create arc for site p and insert it between
+     * arc a and a copy of it.
+     * 
+     * @param a Pointer to arc a.
+     * @param p Site event p.
+     */
+
     Arc* insertArc(Arc *a, Site p) {
         // Copy a to b
         Arc *b = new Arc(a->s);
@@ -156,6 +223,15 @@ class Voronoi {
         return newArc;
     }
 
+    /**
+     * Check convergence of three points.
+     * In Voronoi algorithm, three points p, q, and r
+     * can generate a circle event, where the parabola arc
+     * related to q will disappear. However, it is possible
+     * to check first if this is possible. If it is possible,
+     * not necessarily will happen, but it saves computation.
+     */
+
     bool doesConverge(Site p, Site q, Site r) {
         // Check left turn of p, q, r
         double D = q.x*r.y + p.x*q.y + p.y*r.x
@@ -163,11 +239,21 @@ class Voronoi {
         return D < 0;
     }
 
-    double calculateLowest(Site p, Site q, Site r, Point *center) {
-        // Calculate lowest point of a circle
-        // containing p, q, and r.
-        // Source: https://www.geeksforgeeks.org/equation-of-circle-when-three-points-on-the-circle-are-given/
+    /**
+     * Calculate lowest point of circle that intersects points
+     * p, q, and r. This is the point we are interested during
+     * the algorithm, because it indicates the "priority" of
+     * the circle event among all site and circle events.
+     * Source: https://www.geeksforgeeks.org/equation-of-circle-when-three-points-on-the-circle-are-given/
+     * 
+     * @param p First point.
+     * @param q Second point.
+     * @param r Third point.
+     * @param center Pointer to center of the arc. This value does
+     * not exist yet, in fact it will be "returned".
+     */
 
+    double calculateLowest(Site p, Site q, Site r, Point *center) {
         double  x1 = p.x, y1 = p.y, x2 = q.x,
                 y2 = q.y, x3 = r.x, y3 = r.y;
 
@@ -208,6 +294,12 @@ class Voronoi {
         return k - radius;
     }
 
+    /**
+     * Given a parabola arc, check convergence of neighbor circles.
+     * Check convergence of circles generated by (arc, arc->next,
+     * arc->next->next) and (aarc->prev->prev, arc->prev, arc).
+     */
+
     void checkCircles(Arc *arc) {
         // Check convergence of three breakpoints
         // where arc is the left breakpoint
@@ -238,6 +330,11 @@ class Voronoi {
             }
         }
     }
+
+    /**
+     * Handle a site event when this is the next event
+     * to be handled.
+     */
 
     void handleSiteEvent() {
         cout << "Handling site event: ";
@@ -277,12 +374,25 @@ class Voronoi {
         cout << endl;
     }
 
+    /**
+     * Delete arc of linked list.
+     * 
+     * @param a Pointer to arc.
+     * @param aNext Pointer to pointer to next arc. This is necessary
+     * to continue tracking original arc neighbors after deleting arc a.
+     */
+
     void deleteArc(Arc *a, Arc **aNext) {
         a->prev->next = a->next;
         a->next->prev = a->prev;
         *aNext = a->next;
         delete a;
     }
+
+    /**
+     * Handle a circle event when this is the next event
+     * to be handled.
+     */
 
     void handleCircleEvent() {
         // Get next event and erase it
@@ -311,9 +421,17 @@ class Voronoi {
     }
     
     public:
+        /**
+         * Push a site event to (site) event queue.
+         */
+        
         void push(Site p) {
             sites.push(p);
         }
+
+        /**
+         * Compute whole Voronoi algorithm.
+         */
 
         void compute() {
 
