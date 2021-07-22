@@ -10,6 +10,9 @@ using namespace std;
 //  - degenerate case when circle and site have the same y coord;
 //  - handle degeneracy when the point lies exactly bellow intersection between parabolas;
 
+struct Circle;
+struct Vertex;
+
 /**
  * 2D point, (x, y).
  */
@@ -23,9 +26,6 @@ struct Point {
  */
 
 typedef Point Site;
-
-struct Circle;
-struct Vertex;
 
 /**
  * Halfedge of DCEL.
@@ -99,6 +99,30 @@ struct CompareEvents {
 };
 
 /**
+ * Doubly connected edge list implementation. Store
+ * halfedges edges and vertices, which are linked
+ * among themselves to form the structure. Faces are
+ * not implemented.
+ */
+
+class DCEL {
+    public:
+        vector<Halfedge*> halfedges;
+        vector<Vertex*> vertices;
+
+        Halfedge* newHalfedge() {
+            Halfedge *he = new Halfedge;
+            halfedges.push_back(he);
+            return he;
+        }
+
+        void linkTwins(Halfedge *he1, Halfedge *he2) {
+            he1->twin = he2;
+            he2->twin = he1;
+        }
+};
+
+/**
  * Voronoi algorithm implementation.
  * Specifically, Fortune's algorithm.
  */
@@ -111,8 +135,7 @@ class Voronoi {
     // we will only need to compare the first element of each queue.
     priority_queue<Site, vector<Site>, CompareEvents> sites;
     priority_queue<Circle*, vector<Circle*>, CompareEvents> circles;
-    vector<Halfedge*> halfedges;
-    vector<Vertex*> vertices;
+    DCEL graph;
 
     // Beginning of linked list
     Arc *arcRoot = nullptr;
@@ -362,11 +385,9 @@ class Voronoi {
 
             // Create new half edge records for the edge separating
             // arc a and arc with site p, traced by the two new breakpoints.
-            Halfedge *he1 = newArc->s0 = newArc->prev->s1 = new Halfedge;
-            Halfedge *he2 = newArc->s1 = newArc->next->s0 = new Halfedge;
-            he1->twin = he2;
-            he2->twin = he1;
-            halfedges.push_back(he1); halfedges.push_back(he2);
+            Halfedge *he1 = newArc->s0 = newArc->prev->s1 = graph.newHalfedge();
+            Halfedge *he2 = newArc->s1 = newArc->next->s0 = graph.newHalfedge();
+            graph.linkTwins(he1, he2);
 
             // Check the "new circles" for convergence.
             checkCircles(newArc);
