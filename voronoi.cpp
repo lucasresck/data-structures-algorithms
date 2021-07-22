@@ -49,7 +49,10 @@ struct Vertex {
 };
 
 /**
- * Parabola arc of Voronoi algorithm.
+ * Parabola arc of Voronoi algorithm. Parabola arcs
+ * structure is a linked list. In the original
+ * implementation, it should be a balanced binary search
+ * tree.
  */
 
 struct Arc {
