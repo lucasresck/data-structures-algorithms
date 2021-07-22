@@ -9,6 +9,7 @@ using namespace std;
 //  - degenerate case when two sites have the same y coord;
 //  - degenerate case when circle and site have the same y coord;
 //  - handle degeneracy when the point lies exactly bellow intersection between parabolas;
+//  - create linked list class;
 
 struct Circle;
 struct Vertex;
