@@ -10,6 +10,7 @@ using namespace std;
 //  - degenerate case when circle and site have the same y coord;
 //  - handle degeneracy when the point lies exactly bellow intersection between parabolas;
 //  - create linked list class;
+//  - use Boost's balanced binary search tree;
 
 struct Circle;
 struct Vertex;
