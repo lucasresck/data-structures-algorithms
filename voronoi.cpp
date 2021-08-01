@@ -439,6 +439,7 @@ class Voronoi {
 
             // Create vertex at center.
             Vertex *vertex = graph.newVertex(c->center);
+            cout << "Vertex: " << c->center.x << " " << c->center.y << endl;
             // Create two halfedge records corresponding to the new
             // breakpoint.
             Halfedge *heDown = graph.newHalfedge();
@@ -483,6 +484,7 @@ class Voronoi {
             checkCircle(c->a->next);
 
             delete c->a;
+            cout << endl;
         }
         delete c;
     }
