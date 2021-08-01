@@ -415,7 +415,7 @@ class Voronoi {
      */
 
     void handleCircleEvent() {
-        // Get next event and erase it
+        // Get next event and erase it from the queue.
         Circle *c = circles.top();
         circles.pop();
 
@@ -453,11 +453,11 @@ class Voronoi {
             c->a->prev->s1 = heUp;
             c->a->next->s0 = heDown;
 
-            // Attach the new records to the halfedge record that end
-            // at this vertex.
+            // Attach the new records to the halfedge records that end
+            // at the vertex.
 
-            // Just check which halfedge take from each side, considering
-            // the existence of origin.
+            // Just check which halfedge will be taken from each side,
+            // considering the existence of an  origin.
             Halfedge *left = c->a->s0;
             if (c->a->s0->origin) {
                 left = c->a->s0->twin;
@@ -521,6 +521,34 @@ class Voronoi {
                     handleCircleEvent();
                 }
             }
+
+            cout << "Halfedges are: " << endl;
+            vector<Halfedge*>::iterator it;
+            for (it = graph.halfedges.begin(); it < graph.halfedges.end(); it++) {
+                cout << "   ";
+                if ((*it)->origin) {
+                    cout << (*it)->origin->p.x << " " << (*it)->origin->p.y;
+                }
+                else {
+                    cout << "None" << " " << "None";
+                }
+                cout << "   ";
+                if ((*it)->twin->origin) {
+                    cout << (*it)->twin->origin->p.x << " " << (*it)->twin->origin->p.y;
+                }
+                else {
+                    cout << "None" << " " << "None";
+                }
+                cout << endl;
+            }
+            cout << endl;
+
+            cout << "Vertices are: " << endl;
+            vector<Vertex*>::iterator it2;
+            for (it2 = graph.vertices.begin(); it2 != graph.vertices.end(); ++it2) {
+                cout << "   " << (*it2)->p.x << " " << (*it2)->p.y << endl;
+            }
+            cout << endl;
         }
 
 };
