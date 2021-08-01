@@ -605,6 +605,8 @@ class Voronoi {
                 }
             }
 
+            computeBoundingBox();
+
             cout << "Halfedges are: " << endl;
             vector<Halfedge*>::iterator it;
             for (it = graph.halfedges.begin(); it < graph.halfedges.end(); it++) {
@@ -633,12 +635,13 @@ class Voronoi {
             }
             cout << endl;
 
-            // Toy example to test DCEL linking
-            // Vertex *vertex = graph.vertices[0];
+            // Toy examples to test DCEL linking
+            // Vertex *vertex = graph.vertices[graph.vertices.size()-1];
+            // Point p = vertex->he->next->next->next->next->origin->p;
+            // Point p = vertex->he->prev->prev->prev->prev->origin->p;
+            // Point p = vertex->he->twin->prev->prev->prev->origin->p;
             // Point p = vertex->he->twin->prev->prev->twin->next->twin->prev->twin->next->next->next->next->next->twin->prev->twin->next->next->next->origin->p;
             // cout << p.x << " " << p.y << endl;
-
-            computeBoundingBox();
         }
 
 };
