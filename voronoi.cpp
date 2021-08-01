@@ -21,6 +21,9 @@ struct Vertex;
 
 struct Point {
     double x, y;
+
+    Point() {};
+    Point(double x, double y) : x(x), y(y) { };
 };
 
 /**
@@ -133,6 +136,32 @@ class DCEL {
             he1->twin = he2;
             he2->twin = he1;
         }
+
+        Halfedge* linkVertices(Vertex *v1, Vertex *v2) {
+            Halfedge *he1 = newHalfedge();
+            he1->origin = v1;
+            Halfedge *he2 = newHalfedge();
+            he2->origin = v2;
+            linkTwins(he1, he2);
+
+            // If vertex 1 has no halfedge.
+            if (!(v1->he)) {
+                v1->he = he1;
+            }
+
+            if (!(v2->he)) {
+                v2->he = he2;
+            }
+            return he1;
+        }
+
+        void linkEdges(Halfedge *he1, Halfedge *he2) {
+            he1->twin->next = he2;
+            he2->prev = he1->twin;
+
+            he2->twin->next = he1;
+            he1->prev = he2->twin;
+        }
 };
 
 /**
@@ -152,6 +181,10 @@ class Voronoi {
 
     // Beginning of linked list
     Arc *arcRoot = nullptr;
+
+    // Bounding box variables
+    double bbx1, bbx2, bby1, bby2;
+    double margin = 1;
 
     /**
      * Calculate x coordinate of intersection between
@@ -488,6 +521,55 @@ class Voronoi {
         }
         delete c;
     }
+
+    void computeBoundingBox() {
+        // Create vertices of bounding box.
+        Vertex *a = graph.newVertex(Point(bbx1, bby1));
+        Vertex *b = graph.newVertex(Point(bbx2, bby1));
+        Vertex *d = graph.newVertex(Point(bbx1, bby2));
+        Vertex *c = graph.newVertex(Point(bbx2, bby2));
+
+        // Create edges of bounding box.
+        Halfedge *ab = graph.linkVertices(a, b);
+        Halfedge *bc = graph.linkVertices(b, c);
+        Halfedge *cd = graph.linkVertices(c, d);
+        Halfedge *da = graph.linkVertices(d, a);
+
+
+        // Until now, the halfedges of bounding box exist,
+        // but they do not have prev and next pointers.
+        // We set them now.
+        graph.linkEdges(ab, da->twin);
+        graph.linkEdges(bc, ab->twin);
+        graph.linkEdges(cd, bc->twin);
+        graph.linkEdges(da, cd->twin);
+    }
+
+    void updateBoundingBox(Point p) {
+        double x = p.x;
+        double y = p.y;
+
+        if (sites.size() == 1) {
+            bbx1 = x - margin;
+            bbx2 = x + margin;
+            bby1 = y + margin;
+            bby2 = y - margin;
+        }
+        else {
+            if (x < bbx1 + margin) {
+                bbx1 = x - margin;
+            }
+            else if (x > bbx2 - margin) {
+                bbx2 = x + margin;
+            }
+            if (y > bby1 - margin) {
+                bby1 = y + margin;
+            }
+            else if (y < bby2 + margin) {
+                bby2 = y - margin;
+            }
+        }
+    }
     
     public:
         /**
@@ -496,6 +578,7 @@ class Voronoi {
         
         void push(Site p) {
             sites.push(p);
+            updateBoundingBox(p);
         }
 
         /**
@@ -549,6 +632,13 @@ class Voronoi {
                 cout << "   " << (*it2)->p.x << " " << (*it2)->p.y << endl;
             }
             cout << endl;
+
+            // Toy example to test DCEL linking
+            // Vertex *vertex = graph.vertices[0];
+            // Point p = vertex->he->twin->prev->prev->twin->next->twin->prev->twin->next->next->next->next->next->twin->prev->twin->next->next->next->origin->p;
+            // cout << p.x << " " << p.y << endl;
+
+            computeBoundingBox();
         }
 
 };
@@ -560,7 +650,7 @@ int main() {
     Voronoi voronoi;
 
     // Read the points from the file
-    ifstream f("points.txt");
+    ifstream f("points_2.txt");
     Site p;
 
     // Initialize site event queue
