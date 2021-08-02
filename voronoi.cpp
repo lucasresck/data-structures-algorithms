@@ -644,12 +644,14 @@ class Voronoi {
      * is inside the bounding box.
      * 
      * @param he Pointer to halfedge.
+     * @return the number of bounded extremities. 1 means there is
+     * an intersection, for example.
      */
 
-    bool isEdgeBounded(Halfedge *he) {
+    int isEdgeBounded(Halfedge *he) {
         Point origin1 = he->origin->p;
         Point origin2 = he->twin->origin->p;
-        return isPointBounded(origin1) && isPointBounded(origin2);
+        return isPointBounded(origin1) + isPointBounded(origin2);
     }
 
     /**
@@ -687,13 +689,19 @@ class Voronoi {
         vector<Halfedge*>::iterator he_it;
         for (he_it = graph.halfedges.begin(); he_it != graph.halfedges.end(); he_it++) {
             if (isEdgeLimited(*he_it)) {
-                if (!isEdgeBounded(*he_it)) {
+                // Number of bounded edge extremities.
+                int n = isEdgeBounded(*he_it);
+                
+                // One point inside, one point outside: intersection.
+                if (n == 1) {
                     // It works!
                     cutTheEdge(*he_it);
                 }
-                // else {
-                //     doNothing();
-                // }
+                // Entire edge outside bounding box. Erase it.
+                // Not sure if this can happen.
+                else if (n == 0) {
+                    //TO DO
+                }
             }
             else {
             }
