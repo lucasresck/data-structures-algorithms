@@ -162,6 +162,54 @@ class DCEL {
             he2->twin->next = he1;
             he1->prev = he2->twin;
         }
+
+        Point sumPoints(Point p, Point q) {
+            Point r;
+            r.x = p.x + q.x;
+            r.y = p.y + q.y;
+            return r;
+        }
+
+        Point subPoints(Point p, Point q) {
+            Point r;
+            r.x = p.x - q.x;
+            r.y = p.y - q.y;
+            return r;
+        }
+
+        double crossPoints(Point v, Point w) {
+            return v.x*w.y - v.y*w.x;
+        }
+
+        /**
+         * Check if two edges intersect. We are considering here that
+         * both of them are limited edges, that is, both of them have
+         * both extremities. This is usually the case for the first edge
+         * (the edge to be cut), because this situation was already tested.
+         * For the second edge, it will also be true because this is an edge
+         * from the boundign box. Source:
+         * https://stackoverflow.com/a/565282/12724988
+         * 
+         * @param he1 Pointer to halfedge.
+         * @param he2 Pointer to halfedge.
+         */
+
+        bool checkEdgesIntersection(Halfedge *he1, Halfedge *he2) {
+            Point p = he1->origin->p;
+            Point r = subPoints(he1->twin->origin->p, p);
+            Point q = he2->origin->p;
+            Point s = subPoints(he2->twin->origin->p, q);
+
+            // Two colinear or parallel lines
+            if (crossPoints(r, s) == 0) return false;
+
+            double t = crossPoints(subPoints(q, p), s)/crossPoints(r, s);
+            double u = crossPoints(subPoints(q, p), r)/crossPoints(r, s);
+
+            if ((0 <= t) && (t <= 1) && (0 <= u) && (u <= 1)) return true;
+
+            return false;
+        }
 };
 
 /**
@@ -185,6 +233,9 @@ class Voronoi {
     // Bounding box variables
     double bbx1, bbx2, bby1, bby2;
     double margin = 1;
+
+    // Root of bounding box.
+    Vertex *boundaryRoot = nullptr;
 
     /**
      * Calculate x coordinate of intersection between
@@ -524,7 +575,7 @@ class Voronoi {
 
     void computeBoundingBox() {
         // Create vertices of bounding box.
-        Vertex *a = graph.newVertex(Point(bbx1, bby1));
+        Vertex *a = boundaryRoot = graph.newVertex(Point(bbx1, bby1));
         Vertex *b = graph.newVertex(Point(bbx2, bby1));
         Vertex *d = graph.newVertex(Point(bbx1, bby2));
         Vertex *c = graph.newVertex(Point(bbx2, bby2));
@@ -570,6 +621,84 @@ class Voronoi {
             }
         }
     }
+
+    /** Check if the edge that contains a halfedge
+     * has both extremities.
+     * 
+     * @param he Pointer to halfedge.
+     */
+
+    bool isEdgeLimited(Halfedge *he) {
+        if (!(he->origin)) return false;
+        if (!(he->twin->origin)) return false;
+        return true;
+    }
+
+    bool isPointBounded(Point p) {
+        if (p.x < bbx1 || p.x > bbx2) return false;
+        if (p.y > bby1 || p.y < bby2) return false;
+        return true;
+    }
+
+    /** Check if the (limited) edge that contains a halfedge
+     * is inside the bounding box.
+     * 
+     * @param he Pointer to halfedge.
+     */
+
+    bool isEdgeBounded(Halfedge *he) {
+        Point origin1 = he->origin->p;
+        Point origin2 = he->twin->origin->p;
+        return isPointBounded(origin1) && isPointBounded(origin2);
+    }
+
+    /**
+     * Intersect an edge that cross the bounding box.
+     * 
+     * @param he1 Pointer to halfedge.
+     * @param he2 Pointer to halfedge of the boundary.
+     */
+
+    void intersectEdges(Halfedge *he, Halfedge *heBound) {
+    }
+
+    /**
+     * Cut an edge that intersects the bounding box.
+     * 
+     * @param he Pointer to halfedge.
+     */
+
+    void cutTheEdge(Halfedge *he) {
+        // Iterate over the bounding box.
+        Halfedge *heBound = boundaryRoot->he;
+        do {
+            if (graph.checkEdgesIntersection(he, heBound)) {
+                intersectEdges(he, heBound);
+                return;
+            }
+            else {
+                heBound = heBound->next;
+            }
+        }
+        while (heBound != boundaryRoot->he);
+    }
+
+    void limitDiagramToBoundary() {
+        vector<Halfedge*>::iterator he_it;
+        for (he_it = graph.halfedges.begin(); he_it != graph.halfedges.end(); he_it++) {
+            if (isEdgeLimited(*he_it)) {
+                if (!isEdgeBounded(*he_it)) {
+                    // It works!
+                    cutTheEdge(*he_it);
+                }
+                // else {
+                //     doNothing();
+                // }
+            }
+            else {
+            }
+        }        
+    }
     
     public:
         /**
@@ -606,6 +735,7 @@ class Voronoi {
             }
 
             computeBoundingBox();
+            limitDiagramToBoundary();
 
             cout << "Halfedges are: " << endl;
             vector<Halfedge*>::iterator it;
