@@ -861,8 +861,12 @@ int main() {
 
     // Read the points from the file
     ifstream f("points.txt");
+    
     Site p;
     int r, g, b;
+
+    string dummyLine;
+    getline(f, dummyLine);
 
     // Initialize site event queue
     while (f >> r >> g >> b >> p.x >> p.y) {
