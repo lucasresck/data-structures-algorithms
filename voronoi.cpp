@@ -21,6 +21,7 @@ struct Vertex;
 
 struct Point {
     double x, y;
+    vector<int> color {};
 
     Point() {};
     Point(double x, double y) : x(x), y(y) { };
@@ -859,11 +860,15 @@ int main() {
     Voronoi voronoi;
 
     // Read the points from the file
-    ifstream f("points_2.txt");
+    ifstream f("points.txt");
     Site p;
+    int r, g, b;
 
     // Initialize site event queue
-    while (f >> p.x >> p.y) {
+    while (f >> r >> g >> b >> p.x >> p.y) {
+        p.color.push_back(r);
+        p.color.push_back(g);
+        p.color.push_back(b);
         voronoi.push(p);
     }
 
