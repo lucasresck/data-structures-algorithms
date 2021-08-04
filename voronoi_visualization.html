@@ -4,7 +4,9 @@
         <title>Voronoi visualization</title>
     </head>
     <body>
-        <canvas id="myCanvas" width="200" height="100" style="border:1px solid #000000;"></canvas>
+        <!--Browser can't read the filesystem directly, so there must be an input button.-->
+        <input type="file" onchange="loadFile(this.files[0])">
+        <canvas id="myCanvas" width="300" height="300" style="border:1px solid #000000;"></canvas>
         <script src="voronoi_visualization.js" type="text/javascript"></script>
     </body>
 </html>
