@@ -19,6 +19,7 @@ while len(random_pixels) < args.n_pixels:
     random_pixels.add((color, x, y))
 
 with open('points.txt', 'w') as f:
+    f.write(str(im.size[0]) + ' ' + str(im.size[1]) + '\n')
     for pixel in random_pixels:
         f.write(str(pixel[0][0]) + ' ' + str(pixel[0][1]) + ' ' + str(pixel[0][2]) + ' ')
         f.write(str(pixel[1]) + ' ' + str(pixel[2]) + '\n')
