@@ -2,6 +2,7 @@
 #include <fstream>
 #include <queue>
 #include <math.h> 
+#include <random>
 
 using namespace std;
 
@@ -854,25 +855,36 @@ class Voronoi {
 };
 
 int main() {
-    // Utilization example
+    // Random perturbation to avoid degenerate cases.
+    mt19937 gen(42);
+    uniform_real_distribution<> dis(-0.1, 0.1);
 
     // Create voronoi object
     Voronoi voronoi;
 
     // Read the points from the file
     ifstream f("points.txt");
-    
+
     Site p;
     int r, g, b;
 
+    // Ignore first line, because it has the dimensions
+    // of the image.  
     string dummyLine;
     getline(f, dummyLine);
 
     // Initialize site event queue
     while (f >> r >> g >> b >> p.x >> p.y) {
+        // Add little perturbation to avoid degenerate
+        // cases when computing Voronoi diagram.
+        p.x = p.x + dis(gen);
+        p.y = p.y + dis(gen);
+        
+        // Save the color of the sites.
         p.color.push_back(r);
         p.color.push_back(g);
         p.color.push_back(b);
+
         voronoi.push(p);
     }
 
