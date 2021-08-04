@@ -729,6 +729,65 @@ class Voronoi {
             }
         }        
     }
+
+    /**
+     * From a specific halfedge, iterate over it until finish
+     * the face, and extract the cell that compose this face.
+     * 
+     * @param begin Pointer to halfedge.
+     */
+
+    vector<Point> extractCellFromEdge(Halfedge *begin) {
+        // Empty array in case case the face is not well calculated (yet).
+        vector<Point> empty {};
+
+        if (begin->cellExtracted) return empty;
+        begin->cellExtracted = true;
+
+        // The vector of points.
+        if (!(begin->origin)) return empty;
+        vector<Point> cell {begin->origin->p};
+
+        // We iterate over the next edges, to extract the points.
+        for (Halfedge *he = begin->next; he != begin; he = he->next) {
+            if (!he) return empty;
+            if (!(he->origin)) return empty;
+            Point p = he->origin->p;
+            cell.push_back(p);
+            he->cellExtracted = true;
+        }
+
+        return cell;
+    }
+
+    /**
+     * Save the extracted cells to file.
+     * 
+     * @param cells Vector of cells (which are vectors of points).
+     */
+
+    void saveCells(vector<vector<Point>> cells, vector<Color> colors) {
+        ofstream ofs ("cells.txt", ofstream::out);
+
+        vector<vector<Point>>::iterator cells_it;
+        // Iterate over the cells and save them to file.
+        int i = 0;
+        for (cells_it = cells.begin(); cells_it != cells.end(); cells_it++, i++) {
+            vector<Point> cell = *cells_it;
+            if (!cell.size()) continue;
+
+            Color color = colors[i];
+            ofs << color.r << " " << color.g << " " << color.b << " ";
+
+            vector<Point>::iterator cell_it;
+            for (cell_it = cell.begin(); cell_it != cell.end(); cell_it++) {
+                Point p = *cell_it;
+                ofs << p.x << " " << p.y << " ";
+            }
+            ofs << endl;
+        }
+        ofs.close();
+    }
     
     public:
         /**
@@ -737,7 +796,7 @@ class Voronoi {
         
         void push(Site p) {
             sites.push(p);
-            updateBoundingBox(p);
+            // updateBoundingBox(p);
         }
 
         /**
@@ -805,65 +864,6 @@ class Voronoi {
         }
 
         /**
-         * From a specific halfedge, iterate over it until finish
-         * the face, and extract the cell that compose this face.
-         * 
-         * @param begin Pointer to halfedge.
-         */
-
-        vector<Point> extractCellFromEdge(Halfedge *begin) {
-            // Empty array in case case the face is not well calculated (yet).
-            vector<Point> empty {};
-
-            if (begin->cellExtracted) return empty;
-            begin->cellExtracted = true;
-
-            // The vector of points.
-            if (!(begin->origin)) return empty;
-            vector<Point> cell {begin->origin->p};
-
-            // We iterate over the next edges, to extract the points.
-            for (Halfedge *he = begin->next; he != begin; he = he->next) {
-                if (!he) return empty;
-                if (!(he->origin)) return empty;
-                Point p = he->origin->p;
-                he->cellExtracted = true;
-                cell.push_back(p);
-            }
-
-            return cell;
-        }
-
-        /**
-         * Save the extracted cells to file.
-         * 
-         * @param cells Vector of cells (which are vectors of points).
-         */
-
-        void saveCells(vector<vector<Point>> cells, vector<Color> colors) {
-            ofstream ofs ("cells.txt", ofstream::out);
-
-            vector<vector<Point>>::iterator cells_it;
-            // Iterate over the cells and save them to file.
-            int i = 0;
-            for (cells_it = cells.begin(); cells_it != cells.end(); cells_it++, i++) {
-                vector<Point> cell = *cells_it;
-                if (!cell.size()) continue;
-
-                Color color = colors[i];
-                ofs << color.r << " " << color.g << " " << color.b << " ";
-
-                vector<Point>::iterator cell_it;
-                for (cell_it = cell.begin(); cell_it != cell.end(); cell_it++) {
-                    Point p = *cell_it;
-                    ofs << p.x << " " << p.y << " ";
-                }
-                ofs << endl;
-            }
-            ofs.close();
-        }
-
-        /**
          * Extract the cells that form the Voronoi diagram.
          */
 
@@ -882,9 +882,10 @@ class Voronoi {
 };
 
 int main() {
-    // Random perturbation to avoid degenerate cases.
+    // Small random perturbation to avoid degenerate cases
+    // in the algorithm.
     mt19937 gen(42);
-    uniform_real_distribution<> dis(-0.1, 0.1);
+    uniform_real_distribution<> dis(-0.01, 0.01);
 
     // Create voronoi object
     Voronoi voronoi;
