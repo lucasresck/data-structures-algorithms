@@ -1,4 +1,6 @@
 var c = document.getElementById("myCanvas");
+c.height = 500;
+c.width = 500;
 var ctx = c.getContext("2d");
 
 function drawCell(text) {
