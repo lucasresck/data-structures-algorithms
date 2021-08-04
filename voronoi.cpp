@@ -825,6 +825,7 @@ class Voronoi {
             // Iterate over the cells and save them to file.
             for (cells_it = cells.begin(); cells_it != cells.end(); cells_it++) {
                 vector<Point> cell = *cells_it;
+                if (!cell.size()) continue;
                 vector<Point>::iterator cell_it;
                 for (cell_it = cell.begin(); cell_it != cell.end(); cell_it++) {
                     Point p = *cell_it;
