@@ -3,13 +3,18 @@ var ctx = c.getContext("2d");
 
 function drawCell(text) {
     points = text.split(" ");
+
+    ctx.fillStyle = "rgb(" + points[0] + "," + points[1] + "," + points[2] + ")";
+
     ctx.beginPath();
-    ctx.moveTo(Number(points[0]), Number(points[1]));
-    for (var i = 2; i < points.length-1; i = i + 2) {
+    ctx.moveTo(Number(points[3]), Number(points[4]));
+
+    for (var i = 5; i < points.length-1; i = i + 2) {
         ctx.lineTo(Number(points[i]), Number(points[i+1]));
     }
+    
     ctx.closePath();
-    ctx.stroke();
+    ctx.fill();
 }
 
 function drawCells(text) {
