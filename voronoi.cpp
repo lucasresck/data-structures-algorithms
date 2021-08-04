@@ -296,16 +296,16 @@ class Voronoi {
     bool doesIntersect(Arc *arc, Point p) {
         // Calculate x intersection of arc with prev and next
         double x1, x2;
-        cout << "Intersection: ";
+      // cout << "Intersection: ";
         if (arc->prev) {
             x1 = calculateIntersection(arc, arc->prev, p.y);
-            cout << x1 << " ";
+          // cout << x1 << " ";
         }
         if (arc->next) {
             x2 = calculateIntersection(arc->next, arc, p.y);
-            cout << x2;
+          // cout << x2;
         }
-        cout << endl;
+      // cout << endl;
 
         // Verify if p.x is between both intersections
         // That is, if p intercept arc
@@ -325,7 +325,7 @@ class Voronoi {
         // Iterate over the beach line
         for (Arc *arcIt = arcRoot; arcIt; arcIt = arcIt->next) {
             if (doesIntersect(arcIt, p)) {
-                cout << "Intersect with arc with site: " << arcIt->s.x << " " << arcIt->s.y << endl;
+              // cout << "Intersect with arc with site: " << arcIt->s.x << " " << arcIt->s.y << endl;
                 return arcIt;
             }
         }
@@ -447,7 +447,7 @@ class Voronoi {
             if (doesConverge(arc->prev->s, arc->s, arc->next->s)) {
                 Point center;
                 double lowest = calculateLowest(arc->prev->s, arc->s, arc->next->s, &center);
-                cout << "Circle event found: " << arc->s.x << " " << lowest << endl;
+              // cout << "Circle event found: " << arc->s.x << " " << lowest << endl;
                 Circle *c = new Circle(lowest, arc, center);
                 arc->c = c;
                 circles.push(c);
@@ -461,15 +461,15 @@ class Voronoi {
      */
 
     void handleSiteEvent() {
-        cout << "Handling site event: ";
+      // cout << "Handling site event: ";
         // Get next event and erase it
         Site p = sites.top();
         sites.pop();
-        cout << p.x << " " << p.y << endl;
+      // cout << p.x << " " << p.y << endl;
 
         // If the linked list is empty
         if (arcRoot == nullptr) {
-            cout << "Empty linked list. Adding first arc." << endl;
+          // cout << "Empty linked list. Adding first arc." << endl;
             arcRoot = new Arc(p);
         }
         else {
@@ -494,7 +494,7 @@ class Voronoi {
             checkCircle(newArc->prev);
             checkCircle(newArc->next);
         }
-        cout << endl;
+      // cout << endl;
     }
 
     /**
@@ -523,8 +523,8 @@ class Voronoi {
         // we are dealing with a priority queue, so we just
         // invalidated them.
         if (c->valid) {
-            cout << "Handling circle event: ";
-            cout << c->a->s.x << " " << c->lowest << endl;
+          // cout << "Handling circle event: ";
+          // cout << c->a->s.x << " " << c->lowest << endl;
 
             // Remove the arc from the linked list.
             // However, it still exists.
@@ -538,7 +538,7 @@ class Voronoi {
 
             // Create vertex at center.
             Vertex *vertex = graph.newVertex(c->center);
-            cout << "Vertex: " << c->center.x << " " << c->center.y << endl;
+          // cout << "Vertex: " << c->center.x << " " << c->center.y << endl;
             // Create two halfedge records corresponding to the new
             // breakpoint.
             Halfedge *heDown = graph.newHalfedge();
@@ -590,7 +590,7 @@ class Voronoi {
             checkCircle(c->a->next);
 
             delete c->a;
-            cout << endl;
+          // cout << endl;
         }
         delete c;
     }
@@ -826,33 +826,33 @@ class Voronoi {
             // computeBoundingBox();
             // limitDiagramToBoundary();
 
-            cout << "Halfedges are: " << endl;
+          // cout << "Halfedges are: " << endl;
             vector<Halfedge*>::iterator it;
             for (it = graph.halfedges.begin(); it < graph.halfedges.end(); it++) {
-                cout << "   ";
+              // cout << "   ";
                 if ((*it)->origin) {
-                    cout << (*it)->origin->p.x << " " << (*it)->origin->p.y;
+                  // cout << (*it)->origin->p.x << " " << (*it)->origin->p.y;
                 }
                 else {
-                    cout << "None" << " " << "None";
+                  // cout << "None" << " " << "None";
                 }
-                cout << "   ";
+              // cout << "   ";
                 if ((*it)->twin->origin) {
-                    cout << (*it)->twin->origin->p.x << " " << (*it)->twin->origin->p.y;
+                  // cout << (*it)->twin->origin->p.x << " " << (*it)->twin->origin->p.y;
                 }
                 else {
-                    cout << "None" << " " << "None";
+                  // cout << "None" << " " << "None";
                 }
-                cout << endl;
+              // cout << endl;
             }
-            cout << endl;
+          // cout << endl;
 
-            cout << "Vertices are: " << endl;
+          // cout << "Vertices are: " << endl;
             vector<Vertex*>::iterator it2;
             for (it2 = graph.vertices.begin(); it2 != graph.vertices.end(); ++it2) {
-                cout << "   " << (*it2)->p.x << " " << (*it2)->p.y << endl;
+              // cout << "   " << (*it2)->p.x << " " << (*it2)->p.y << endl;
             }
-            cout << endl;
+          // cout << endl;
 
             // Toy examples to test DCEL linking
             // Vertex *vertex = graph.vertices[graph.vertices.size()-1];
