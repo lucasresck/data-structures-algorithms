@@ -16,13 +16,20 @@ using namespace std;
 struct Circle;
 struct Vertex;
 
+struct Color {
+    int r, g, b;
+    
+    Color() {};
+    Color(int r, int g, int b) : r(r), g(g), b(b) {};
+};
+
 /**
  * 2D point, (x, y).
  */
 
 struct Point {
     double x, y;
-    vector<int> color {};
+    Color color {};
 
     Point() {};
     Point(double x, double y) : x(x), y(y) { };
@@ -35,6 +42,10 @@ struct Point {
 typedef Point Site;
 
 /**
+ * RGB color.
+ */
+
+/**
  * Halfedge of DCEL.
  */
 
@@ -43,6 +54,7 @@ struct Halfedge {
     Halfedge *prev, *next;
     Halfedge *twin;
     bool cellExtracted;
+    Color color;
 
     Halfedge() : origin(nullptr), prev(nullptr), next(nullptr), twin(nullptr), cellExtracted(false) {};
 };
@@ -538,7 +550,10 @@ class Voronoi {
 
             // Update breakpoints of left and right arcs.
             c->a->prev->s1 = heUp;
+            // We know that heUp must carry the color of the site of the prev of c->a
+            heUp->color = c->a->prev->s.color;
             c->a->next->s0 = heDown;
+            heDown->color = c->a->next->s.color;
 
             // Attach the new records to the halfedge records that end
             // at the vertex.
@@ -550,11 +565,15 @@ class Voronoi {
                 left = c->a->s0->twin;
             }
             left->origin = vertex;
+            left->color = c->a->prev->s.color;
+            left->twin->color = c->a->s.color;
             Halfedge *right = c->a->s1;
             if (c->a->s1->origin) {
                 right = c->a->s1->twin;
             }
             right->origin = vertex;
+            right->color = c->a->s.color;
+            right->twin->color = c->a->next->s.color;
 
             // Link among halfedges.
             left->twin->next = right;
@@ -811,6 +830,7 @@ class Voronoi {
                 he->cellExtracted = true;
                 cell.push_back(p);
             }
+
             return cell;
         }
 
@@ -820,14 +840,19 @@ class Voronoi {
          * @param cells Vector of cells (which are vectors of points).
          */
 
-        void saveCells(vector<vector<Point>> cells) {
+        void saveCells(vector<vector<Point>> cells, vector<Color> colors) {
             ofstream ofs ("cells.txt", ofstream::out);
 
             vector<vector<Point>>::iterator cells_it;
             // Iterate over the cells and save them to file.
-            for (cells_it = cells.begin(); cells_it != cells.end(); cells_it++) {
+            int i = 0;
+            for (cells_it = cells.begin(); cells_it != cells.end(); cells_it++, i++) {
                 vector<Point> cell = *cells_it;
                 if (!cell.size()) continue;
+
+                Color color = colors[i];
+                ofs << color.r << " " << color.g << " " << color.b << " ";
+
                 vector<Point>::iterator cell_it;
                 for (cell_it = cell.begin(); cell_it != cell.end(); cell_it++) {
                     Point p = *cell_it;
@@ -845,11 +870,13 @@ class Voronoi {
         void extractCells() {
             vector<Halfedge*>::iterator he_it;
             vector<vector<Point>> cells;
+            vector<Color> colors;
             for (he_it = graph.halfedges.begin(); he_it != graph.halfedges.end(); he_it++) {
                 vector<Point> cell = extractCellFromEdge(*he_it);
                 cells.push_back(cell);
+                colors.push_back((*he_it)->color);
             }
-            saveCells(cells);
+            saveCells(cells, colors);
         }
 
 };
@@ -879,11 +906,9 @@ int main() {
         // cases when computing Voronoi diagram.
         p.x = p.x + dis(gen);
         p.y = p.y + dis(gen);
-        
+
         // Save the color of the sites.
-        p.color.push_back(r);
-        p.color.push_back(g);
-        p.color.push_back(b);
+        p.color = Color(r, g, b);
 
         voronoi.push(p);
     }
