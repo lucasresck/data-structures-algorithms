@@ -742,8 +742,8 @@ class Voronoi {
                 }
             }
 
-            computeBoundingBox();
-            limitDiagramToBoundary();
+            // computeBoundingBox();
+            // limitDiagramToBoundary();
 
             cout << "Halfedges are: " << endl;
             vector<Halfedge*>::iterator it;
@@ -782,6 +782,81 @@ class Voronoi {
             // cout << p.x << " " << p.y << endl;
         }
 
+        /**
+         * From a specific halfedge, iterate over it until finish
+         * the face, and extract the triangles that compose this face.
+         * 
+         * @param begin Pointer to halfedge.
+         */
+
+        vector<vector<Point>> extractTrianglesFromFace(Halfedge *begin) {
+            // Empty array in case case the face is not well calculated (yet).
+            vector<vector<Point>> empty;
+
+            // The vector of triangles (that are vector of three points).
+            vector<vector<Point>> triangles;
+
+            // If the halfedge does not has origin, we do not calculate triangles.
+            if (!(begin->origin)) return empty;
+            Point a = begin->origin->p;
+
+            // If there is no next, we cancel the triangulation.
+            if (!(begin->next)) return empty;
+            if (!(begin->next->origin)) return empty;
+
+            // We iterate over the next edges, to form the triangles.
+            for (Halfedge *he = begin->next; he->next != begin; he = he->next) {
+                Point b = he->origin->p;
+
+                if (!(he->next)) return empty;
+                if (!(he->next->origin)) return empty;
+                Point c = he->next->origin->p;
+
+                vector<Point> points {a, b, c};
+                triangles.push_back(points);
+            }
+
+            return triangles;
+        }
+
+        /**
+         * Save the extracted triangles to file.
+         * 
+         * @param triangles Vector of triangles.
+         */
+
+        void saveTriangles(vector<vector<Point>> triangles) {
+            ofstream ofs ("triangles.txt", ofstream::out);
+
+            vector<vector<Point>>::iterator triangles_it;
+            // Iterate over the triangles and save them to file.
+            for (triangles_it = triangles.begin(); triangles_it != triangles.end(); triangles_it++) {
+                vector<Point> triangle = *triangles_it;
+                vector<Point>::iterator triangle_it;
+                for (triangle_it = triangle.begin(); triangle_it != triangle.end(); triangle_it++) {
+                    Point p = *triangle_it;
+                    ofs << p.x << " " << p.y << " ";
+                }
+                ofs << endl;
+            }
+
+            ofs.close();
+        }
+
+        /**
+         * Extract the triangles that form each face.
+         */
+
+        void extractTriangles() {
+            vector<Halfedge*>::iterator he_it;
+            vector<vector<Point>> triangles;
+            for (he_it = graph.halfedges.begin(); he_it != graph.halfedges.end(); he_it++) {
+                vector<vector<Point>> moreTriangles = extractTrianglesFromFace(*he_it);
+                triangles.insert(triangles.end(), moreTriangles.begin(), moreTriangles.end());
+            }
+            saveTriangles(triangles);
+        }
+
 };
 
 int main() {
@@ -801,6 +876,9 @@ int main() {
 
     // Compute the Voronoi diagram
     voronoi.compute();
+
+    // Extract the triangles that form the Voronoi diagram.
+    voronoi.extractTriangles();
 
     return 0;
 }
