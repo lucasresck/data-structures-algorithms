@@ -1,14 +1,12 @@
 var c = document.getElementById("myCanvas");
-c.height = 500;
-c.width = 500;
 var ctx = c.getContext("2d");
 
 function drawCell(text) {
     points = text.split(" ");
     ctx.beginPath();
-    ctx.moveTo(10*Number(points[0]), 10*Number(points[1]));
+    ctx.moveTo(Number(points[0]), Number(points[1]));
     for (var i = 2; i < points.length-1; i = i + 2) {
-        ctx.lineTo(10*Number(points[i]), 10*Number(points[i+1]));
+        ctx.lineTo(Number(points[i]), Number(points[i+1]));
     }
     ctx.closePath();
     ctx.stroke();
@@ -27,4 +25,11 @@ function drawCells(text) {
 async function loadFile(file) {
     let text = await file.text();
     drawCells(text);
+}
+
+async function updateDimensions(file) {
+    let text = await file.text();
+    var firstLine = text.split("\n")[0];
+    c.width = Number(firstLine.split(" ")[0]);
+    c.height = Number(firstLine.split(" ")[1]);
 }

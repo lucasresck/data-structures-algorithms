@@ -5,6 +5,7 @@
     </head>
     <body>
         <!--Browser can't read the filesystem directly, so there must be an input button.-->
+        <input type="file" onchange="updateDimensions(this.files[0])">
         <input type="file" onchange="loadFile(this.files[0])">
         <canvas id="myCanvas" style="border:1px solid #000000;"></canvas>
         <script src="voronoi_visualization.js" type="text/javascript"></script>
