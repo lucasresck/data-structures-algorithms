@@ -825,17 +825,22 @@ class Voronoi {
          * @param triangles Vector of triangles.
          */
 
-        void saveTriangles(vector<vector<Point>> triangles) {
+        void saveTriangles(vector<vector<vector<Point>>> faces) {
             ofstream ofs ("triangles.txt", ofstream::out);
 
-            vector<vector<Point>>::iterator triangles_it;
+            vector<vector<vector<Point>>>::iterator faces_it;
             // Iterate over the triangles and save them to file.
-            for (triangles_it = triangles.begin(); triangles_it != triangles.end(); triangles_it++) {
-                vector<Point> triangle = *triangles_it;
-                vector<Point>::iterator triangle_it;
-                for (triangle_it = triangle.begin(); triangle_it != triangle.end(); triangle_it++) {
-                    Point p = *triangle_it;
-                    ofs << p.x << " " << p.y << " ";
+            for (faces_it = faces.begin(); faces_it != faces.end(); faces_it++) {
+                vector<vector<Point>> face = *faces_it;
+                vector<vector<Point>>::iterator triangles_it;
+                for (triangles_it = face.begin(); triangles_it != face.end(); triangles_it++) {
+                    vector<Point> triangle = *triangles_it;
+                    vector<Point>::iterator triangle_it;
+                    for (triangle_it = triangle.begin(); triangle_it != triangle.end(); triangle_it++) {
+                        Point p = *triangle_it;
+                        ofs << p.x << " " << p.y << " ";
+                    }
+                    ofs << endl;
                 }
                 ofs << endl;
             }
@@ -849,12 +854,12 @@ class Voronoi {
 
         void extractTriangles() {
             vector<Halfedge*>::iterator he_it;
-            vector<vector<Point>> triangles;
+            vector<vector<vector<Point>>> faces;
             for (he_it = graph.halfedges.begin(); he_it != graph.halfedges.end(); he_it++) {
-                vector<vector<Point>> moreTriangles = extractTrianglesFromFace(*he_it);
-                triangles.insert(triangles.end(), moreTriangles.begin(), moreTriangles.end());
+                vector<vector<Point>> face = extractTrianglesFromFace(*he_it);
+                faces.push_back(face);
             }
-            saveTriangles(triangles);
+            saveTriangles(faces);
         }
 
 };
