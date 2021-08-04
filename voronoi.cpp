@@ -40,8 +40,9 @@ struct Halfedge {
     Vertex *origin;
     Halfedge *prev, *next;
     Halfedge *twin;
+    bool cellExtracted;
 
-    Halfedge() : origin(nullptr), prev(nullptr), next(nullptr), twin(nullptr) {};
+    Halfedge() : origin(nullptr), prev(nullptr), next(nullptr), twin(nullptr), cellExtracted(false) {};
 };
 
 /**
@@ -784,82 +785,68 @@ class Voronoi {
 
         /**
          * From a specific halfedge, iterate over it until finish
-         * the face, and extract the triangles that compose this face.
+         * the face, and extract the cell that compose this face.
          * 
          * @param begin Pointer to halfedge.
          */
 
-        vector<vector<Point>> extractTrianglesFromFace(Halfedge *begin) {
+        vector<Point> extractCellFromEdge(Halfedge *begin) {
             // Empty array in case case the face is not well calculated (yet).
-            vector<vector<Point>> empty;
+            vector<Point> empty {};
 
-            // The vector of triangles (that are vector of three points).
-            vector<vector<Point>> triangles;
+            if (begin->cellExtracted) return empty;
+            begin->cellExtracted = true;
 
-            // If the halfedge does not has origin, we do not calculate triangles.
+            // The vector of points.
             if (!(begin->origin)) return empty;
-            Point a = begin->origin->p;
+            vector<Point> cell {begin->origin->p};
 
-            // If there is no next, we cancel the triangulation.
-            if (!(begin->next)) return empty;
-            if (!(begin->next->origin)) return empty;
-
-            // We iterate over the next edges, to form the triangles.
-            for (Halfedge *he = begin->next; he->next != begin; he = he->next) {
-                Point b = he->origin->p;
-
-                if (!(he->next)) return empty;
-                if (!(he->next->origin)) return empty;
-                Point c = he->next->origin->p;
-
-                vector<Point> points {a, b, c};
-                triangles.push_back(points);
+            // We iterate over the next edges, to extract the points.
+            for (Halfedge *he = begin->next; he != begin; he = he->next) {
+                if (!he) return empty;
+                if (!(he->origin)) return empty;
+                Point p = he->origin->p;
+                he->cellExtracted = true;
+                cell.push_back(p);
             }
-
-            return triangles;
+            return cell;
         }
 
         /**
-         * Save the extracted triangles to file.
+         * Save the extracted cells to file.
          * 
-         * @param triangles Vector of triangles.
+         * @param cells Vector of cells (which are vectors of points).
          */
 
-        void saveTriangles(vector<vector<vector<Point>>> faces) {
-            ofstream ofs ("triangles.txt", ofstream::out);
+        void saveCells(vector<vector<Point>> cells) {
+            ofstream ofs ("cells.txt", ofstream::out);
 
-            vector<vector<vector<Point>>>::iterator faces_it;
-            // Iterate over the triangles and save them to file.
-            for (faces_it = faces.begin(); faces_it != faces.end(); faces_it++) {
-                vector<vector<Point>> face = *faces_it;
-                vector<vector<Point>>::iterator triangles_it;
-                for (triangles_it = face.begin(); triangles_it != face.end(); triangles_it++) {
-                    vector<Point> triangle = *triangles_it;
-                    vector<Point>::iterator triangle_it;
-                    for (triangle_it = triangle.begin(); triangle_it != triangle.end(); triangle_it++) {
-                        Point p = *triangle_it;
-                        ofs << p.x << " " << p.y << " ";
-                    }
-                    ofs << endl;
+            vector<vector<Point>>::iterator cells_it;
+            // Iterate over the cells and save them to file.
+            for (cells_it = cells.begin(); cells_it != cells.end(); cells_it++) {
+                vector<Point> cell = *cells_it;
+                vector<Point>::iterator cell_it;
+                for (cell_it = cell.begin(); cell_it != cell.end(); cell_it++) {
+                    Point p = *cell_it;
+                    ofs << p.x << " " << p.y << " ";
                 }
                 ofs << endl;
             }
-
             ofs.close();
         }
 
         /**
-         * Extract the triangles that form each face.
+         * Extract the cells that form the Voronoi diagram.
          */
 
-        void extractTriangles() {
+        void extractCells() {
             vector<Halfedge*>::iterator he_it;
-            vector<vector<vector<Point>>> faces;
+            vector<vector<Point>> cells;
             for (he_it = graph.halfedges.begin(); he_it != graph.halfedges.end(); he_it++) {
-                vector<vector<Point>> face = extractTrianglesFromFace(*he_it);
-                faces.push_back(face);
+                vector<Point> cell = extractCellFromEdge(*he_it);
+                cells.push_back(cell);
             }
-            saveTriangles(faces);
+            saveCells(cells);
         }
 
 };
@@ -882,8 +869,8 @@ int main() {
     // Compute the Voronoi diagram
     voronoi.compute();
 
-    // Extract the triangles that form the Voronoi diagram.
-    voronoi.extractTriangles();
+    // Extract the cells that form the Voronoi diagram.
+    voronoi.extractCells();
 
     return 0;
 }
