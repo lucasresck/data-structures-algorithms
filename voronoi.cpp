@@ -196,6 +196,13 @@ class DCEL {
             return v.x*w.y - v.y*w.x;
         }
 
+        Point multScalar(double t, Point p) {
+            Point q;
+            q.x = t*p.x;
+            q.y = t*p.y;
+            return q;
+        }
+
         /**
          * Check if two edges intersect. We are considering here that
          * both of them are limited edges, that is, both of them have
@@ -207,9 +214,10 @@ class DCEL {
          * 
          * @param he1 Pointer to halfedge.
          * @param he2 Pointer to halfedge.
+         * @param intersection Pointer to intersection.
          */
 
-        bool checkEdgesIntersection(Halfedge *he1, Halfedge *he2) {
+        bool checkEdgesIntersection(Halfedge *he1, Halfedge *he2, Point *intersection) {
             Point p = he1->origin->p;
             Point r = subPoints(he1->twin->origin->p, p);
             Point q = he2->origin->p;
@@ -221,7 +229,10 @@ class DCEL {
             double t = crossPoints(subPoints(q, p), s)/crossPoints(r, s);
             double u = crossPoints(subPoints(q, p), r)/crossPoints(r, s);
 
-            if ((0 <= t) && (t <= 1) && (0 <= u) && (u <= 1)) return true;
+            if ((0 <= t) && (t <= 1) && (0 <= u) && (u <= 1)) {
+                *intersection = sumPoints(p, multScalar(t, r));
+                return true;
+            }
 
             return false;
         }
@@ -679,11 +690,35 @@ class Voronoi {
     /**
      * Intersect an edge that cross the bounding box.
      * 
-     * @param he1 Pointer to halfedge.
-     * @param he2 Pointer to halfedge of the boundary.
+     * @param he Pointer to halfedge.
+     * @param heBound Pointer to halfedge of the boundary.
+     * @param intersect Intersection point.
      */
 
-    void intersectEdges(Halfedge *he, Halfedge *heBound) {
+    void intersectEdges(Halfedge *he, Halfedge *heBound, Point intersection) {
+        // I want he that goes to outside the boundary
+        if(!isPointBounded(he->origin->p)) he = he->twin;
+
+        Vertex *v = graph.newVertex(intersection);
+
+        Halfedge *heTwin = he->twin;
+        Halfedge *heBoundTwin = heBound->twin;
+        Halfedge *heBound2 = graph.newHalfedge();
+        Halfedge *heBoundTwin2 = graph.newHalfedge();
+
+        heBound2->origin = v;
+        heBoundTwin2->origin = v;
+        heTwin->origin = v;
+
+        heBound2->next = heBound->next;
+        heBound2->prev = heBound;
+        heBoundTwin2->next = heBoundTwin->next;
+        heBoundTwin2->prev = he;
+
+        he->next = heBoundTwin2;
+        heBoundTwin->next = heTwin;
+        heTwin->prev = heBoundTwin;
+
     }
 
     /**
@@ -695,9 +730,10 @@ class Voronoi {
     void cutTheEdge(Halfedge *he) {
         // Iterate over the bounding box.
         Halfedge *heBound = boundaryRoot->he;
+        Point *intersection;
         do {
-            if (graph.checkEdgesIntersection(he, heBound)) {
-                intersectEdges(he, heBound);
+            if (graph.checkEdgesIntersection(he, heBound, intersection)) {
+                intersectEdges(he, heBound, *intersection);
                 return;
             }
             else {
@@ -709,7 +745,8 @@ class Voronoi {
 
     void limitDiagramToBoundary() {
         vector<Halfedge*>::iterator he_it;
-        for (he_it = graph.halfedges.begin(); he_it != graph.halfedges.end(); he_it++) {
+        vector<Halfedge*> halfedgesCopy = graph.halfedges;
+        for (he_it = halfedgesCopy.begin(); he_it != halfedgesCopy.end(); he_it++) {
             if (isEdgeLimited(*he_it)) {
                 // Number of bounded edge extremities.
                 int n = isEdgeBounded(*he_it);
@@ -853,14 +890,6 @@ class Voronoi {
               // cout << "   " << (*it2)->p.x << " " << (*it2)->p.y << endl;
             }
           // cout << endl;
-
-            // Toy examples to test DCEL linking
-            // Vertex *vertex = graph.vertices[graph.vertices.size()-1];
-            // Point p = vertex->he->next->next->next->next->origin->p;
-            // Point p = vertex->he->prev->prev->prev->prev->origin->p;
-            // Point p = vertex->he->twin->prev->prev->prev->origin->p;
-            // Point p = vertex->he->twin->prev->prev->twin->next->twin->prev->twin->next->next->next->next->next->twin->prev->twin->next->next->next->origin->p;
-            // cout << p.x << " " << p.y << endl;
         }
 
         /**
