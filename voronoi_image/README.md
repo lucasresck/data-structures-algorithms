@@ -2,6 +2,10 @@
 
 Voronoi diagram implementation in C++ and an application to images.
 
+Original             |  Voronoi
+:-------------------------:|:-------------------------:
+![](https://raw.githubusercontent.com/lucasresck/data-structures-algorithms/main/images/cover_1.jpg)  |  ![](https://raw.githubusercontent.com/lucasresck/data-structures-algorithms/main/images/cover_2.png)
+
 ## Instructions
 
 First, clone the repository:
