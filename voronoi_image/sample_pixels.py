@@ -3,7 +3,7 @@ import argparse
 import numpy as np
 
 parser = argparse.ArgumentParser(description='Read an image.')
-parser.add_argument('--image_path', default='images/image_1.jpg', type=str, help='Path of the image.')
+parser.add_argument('--image_path', default='../images/image_1.jpg', type=str, help='Path of the image.')
 parser.add_argument('--n_pixels', default=10000, type=int, help='Number of random pixels.')
 args = parser.parse_args()
 

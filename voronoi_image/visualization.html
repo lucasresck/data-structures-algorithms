@@ -1,17 +1,17 @@
 <!DOCTYPE html>
 <html>
     <head>
-        <title>Voronoi visualization</title>
+        <title>Voronoi image</title>
     </head>
     <body>
         <!--Browser can't read the filesystem directly, so there must be an input button.-->
-        <button style="display:block;width:120px; height:30px;" onclick="document.getElementById('pointsInput').click()">Upload points.txt</button>
+        <button style="display:block;width:140px; height:30px;" onclick="document.getElementById('pointsInput').click()">1. Upload points.txt</button>
         <input type="file" id="pointsInput" style="display:none" onchange="updateDimensions(this.files[0])">
 
-        <button style="display:block;width:120px; height:30px;" onclick="document.getElementById('cellsInput').click()">Upload cells.txt</button>
+        <button style="display:block;width:140px; height:30px;" onclick="document.getElementById('cellsInput').click()">2. Upload cells.txt</button>
         <input type="file" id="cellsInput" style="display:none" onchange="loadFile(this.files[0])">
 
         <canvas id="myCanvas"></canvas>
-        <script src="voronoi_visualization.js" type="text/javascript"></script>
+        <script src="visualization.js" type="text/javascript"></script>
     </body>
 </html>
