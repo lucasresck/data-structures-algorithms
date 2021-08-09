@@ -1,0 +1,35 @@
+\noindent \textbf{Exercício 1} (2.5 pontos) Escolha 20 cidades brasileiras, encontre as distâncias
+entre elas de forma euclideana e calculando sua distância usando estradas.
+Mostre a execução do algoritmo A* para essas cidades (pode ser feito
+tanto manualmente quando implementando o algoritmo e mostrando o
+log de execução).
+
+\smallskip
+
+\noindent \textbf{Bônus} (0.5) Calcule o índice de desvio dessas cidades e adapte a heurística
+para que ela seja não admissível. O ótimo deixa de ser atingido? Qual a
+diferença?
+
+\bigskip
+
+\noindent \textbf{Solução:} O algoritmo foi implementado para encontrar o menor caminho entre duas capitais brasileiras. O código está disponível neste \href{https://github.com/lucasresck/data-structures-algorithms/blob/main/notebooks/city_distances.ipynb}{Jupyter notebook}. Por exemplo, calculando o melhor caminho entre São Paulo e Salvador, encontramos o seguinte log da implementação:
+
+\begin{verbatim}
+[''] São Paulo
+
+['', 'São Paulo'] Belo Horizonte
+
+['', 'São Paulo'] Rio de Janeiro
+
+['', 'São Paulo'] Vitória
+
+['', 'São Paulo', 'Rio de Janeiro'] Vitória
+
+['', 'São Paulo', 'Rio de Janeiro'] Belo Horizonte
+
+['', 'São Paulo', 'Belo Horizonte'] Vitória
+
+['', 'São Paulo', 'Belo Horizonte'] Salvador
+\end{verbatim}
+
+Essas foram as tentativas do algoritmo. Ele passou pelos nós de SP, BH, RJ, Vitória e, finalmente, Salvador. A última linha mostra o caminho escolhido, passando por SP, BH e indo direto para Salvador.
