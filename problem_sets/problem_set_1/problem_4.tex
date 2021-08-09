@@ -15,3 +15,15 @@ Demonstre quão boa é a aproximação deste algoritmo (considerando OPT
 \bigskip
 
 \noindent \textbf{Solução:}
+Chamemos de $\text{OPT}^\ast$ a solução ótima para esse problema, porém relaxando a condição de que as tarefas não podem ser divididas entre máquinas. Dessa forma, é claro que $\text{OPT}^\ast = \frac{1}{m} \sum_{i = 1}^n t_i$, quando todas as máquinas possuem tempo exatamente igual. (Suponha, por absurdo, que esse não seja o caso. Então alguma máquina terá tempo menor que $\text{OPT}^\ast$, porém alguma outra máquina terá necessariamente tempo maior do que $\text{OPT}^\ast$. Ora, é possível reduzir o tempo de uma das máquinas, diminuindo o tempo de execução total. Absurdo.) É interessante pensar nesse problema como barras de altura $t_i$, que devem ser empilhadas em $m$ posições diferentes, de modo a minimizar a altura da maior das $m$ torres. Essa é a analogia que seguiremos daqui para frente.
+
+Voltemos ao problema original. Afirmação: não existe barra que tenha sua base a partir da altura $\text{OPT}^\ast$, isto é, toda barra tem sua base iniciando em uma altura menor do que $\text{OPT}^\ast$. Ora, não é difícil ver que, caso existisse essa barra, quando ela foi colocada é necessariamente verdade que existia pelo menos uma torre com altura menor do que $\text{OPT}^\ast$, e essa barra deveria ter sido empilhada nessa torre. Para justificarmos essa segunda afirmação, podemos argumentar que, caso não houvesse torre com altura menor do que $\text{OPT}^\ast$, todas as torres teriam altura a partir de $\text{OPT}^\ast$, de modo que a média das alturas das torres fosse maior do que ou igual a $\text{OPT}^\ast$, o que é um absurdo, claramente, pois contradiz a própria definição de $\text{OPT}^\ast$.
+
+Ora, mostramos, basicamente, que $G \le \text{OPT}^\ast + \max t_i$. Daí segue que:
+\begin{align*}
+    G &\le \text{OPT}^\ast + \max t_i \\
+    &\le \text{OPT} + \max t_i \\
+    &\le \text{OPT} + \text{OPT} \\
+    &\le 2\text{OPT},
+\end{align*}
+sendo a penúltima desigualdade justificada com o fato de que, se não é possível distribuir frações das barras, então necessariamente $t_i \le \text{OPT}$, para todo $i$.
