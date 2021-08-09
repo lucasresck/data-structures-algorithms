@@ -1,0 +1,17 @@
+\noindent \textbf{Exercício 4} (3.0 pontos) Suponha que temos $n$ tarefas onde cada uma toma
+um tempo $t_i$ para processar em $m$ máquinas idênticas nas quais desejamos
+dizer qual a sequência de tarefas em cada máquina. Uma mesma tarefa
+não pode ser divida entre máquinas. Para um dado planejamento,
+$A_j$ é o conjunto de tarefas colocados na máquina $j$.
+Seja $L_j = \sum_{i \in A_j} t_i$ o tempo da
+máquina $j$. O tempo de execução dessas tarefas será o maior $L_j$ dentre as
+máquinas.
+Nós consideramos um algoritmo guloso para esse problema que ordena
+as tarefas de tal forma que $t_1 \ge t_2 \ge \cdots \ge t_n$ e iterativamente aloca o
+próximo serviço na maquina com a menor carga.
+Demonstre quão boa é a aproximação deste algoritmo (considerando OPT
+é a solução ótima, esperamos algo menor que 2OPT).
+
+\bigskip
+
+\noindent \textbf{Solução:}
