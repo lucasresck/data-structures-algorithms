@@ -4,12 +4,6 @@ Mostre a execução do algoritmo A* para essas cidades (pode ser feito
 tanto manualmente quando implementando o algoritmo e mostrando o
 log de execução).
 
-\smallskip
-
-\noindent \textbf{Bônus} (0.5) Calcule o índice de desvio dessas cidades e adapte a heurística
-para que ela seja não admissível. O ótimo deixa de ser atingido? Qual a
-diferença?
-
 \bigskip
 
 \noindent \textbf{Solução:} O algoritmo foi implementado para encontrar o menor caminho entre duas capitais brasileiras. O código está disponível neste \href{https://github.com/lucasresck/data-structures-algorithms/blob/main/notebooks/city_distances.ipynb}{Jupyter notebook}. Por exemplo, calculando o melhor caminho entre São Paulo e Salvador, encontramos o seguinte log da implementação:
@@ -32,4 +26,4 @@ diferença?
 ['', 'São Paulo', 'Belo Horizonte'] Salvador
 \end{verbatim}
 
-Essas foram as tentativas do algoritmo. Ele passou pelos nós de SP, BH, RJ, Vitória e, finalmente, Salvador. A última linha mostra o caminho escolhido, passando por SP, BH e indo direto para Salvador.
+Esses foram os nós verificados pelo algoritmo na fronteira da árvore de busca. Para cada linha, a lista mostra um histórico de caminho da origem até o nó verificado, e a cidade em seguida da lista mostra a cidade do nó verificado. Percebemos que nosso algoritmo passou pelos nós de SP, BH, RJ, Vitória e, finalmente, Salvador. A última linha mostra o caminho escolhido, passando por SP, BH e indo direto para Salvador, o que faz bastante sentido.
