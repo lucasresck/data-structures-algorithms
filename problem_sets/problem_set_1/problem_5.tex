@@ -4,8 +4,8 @@ do exercício anterior. Como podemos melhorar essa solução?
 \bigskip
 
 \noindent \textbf{Solução:}
-Um dos problemas do nosso algoritmo guloso é que não necessariamente a torre mais alta é composta pelos menores blocos, isto é, seria possível, pelo menos em alguns casos específicos, trocar blocos da torre maior com algum outro das torres menores, de modo a diminuir o valor da solução.
+Um dos problemas do nosso algoritmo guloso é que não necessariamente a torre mais alta é composta pelos menores blocos, isto é, seria possível, pelo menos em alguns casos específicos, trocar blocos da torre maior com outros das torres menores, de modo a diminuir o valor da solução.
 
 Um exemplo simples, porém que mostra essa falha específica do nosso algoritmo guloso, seria $m = 3$ e os seguintes tempos: $10, 10, 8, 8, 8, 7, 6$. Na primeira torre, teremos $10+7$. Na segunda, $10+8$. Na terceira, $8+8+6$. Ou seja, o valor dessa configuração é $8+8+6=22$. Porém, se trocássemos os tempos $7$ da primeira torre com o tempo $8$ da segunda, teremos um valor de $8+7+6=21$, e a primeira torre cresce de $10+7=17$ para $10+8=18$, sem prejudicar a solução.
 
-Portanto, uma das formas de se melhorar o algoritmo é diminuir o tamanho da torre mais alta trocando barras com torres menores.
+Portanto, uma das formas de se melhorar o algoritmo é diminuir o tamanho da torre mais alta trocando barras com torres menores, no estilo de um algoritmo de \textbf{busca local}.

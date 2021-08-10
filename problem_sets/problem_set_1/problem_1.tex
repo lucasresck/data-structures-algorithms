@@ -6,24 +6,108 @@ log de execução).
 
 \bigskip
 
-\noindent \textbf{Solução:} O algoritmo foi implementado para encontrar o menor caminho entre duas capitais brasileiras. O código está disponível neste \href{https://github.com/lucasresck/data-structures-algorithms/blob/main/notebooks/city_distances.ipynb}{Jupyter notebook}. Por exemplo, calculando o melhor caminho entre São Paulo e Salvador, encontramos o seguinte log da implementação:
+\noindent \textbf{Solução:} O algoritmo foi implementado para encontrar o menor caminho entre duas capitais brasileiras. O código está disponível neste \href{https://github.com/lucasresck/data-structures-algorithms/blob/main/notebooks/city_distances.ipynb}{Jupyter notebook}. Por exemplo, calculando o melhor caminho entre Porto Alegre e Rio Branco, encontramos o seguinte log da implementação:
 
 \begin{verbatim}
-[''] São Paulo
+Porto Alegre    0
 
-['', 'São Paulo'] Belo Horizonte
+Porto Alegre    Florianópolis    476
 
-['', 'São Paulo'] Rio de Janeiro
+Porto Alegre    Curitiba    711
 
-['', 'São Paulo'] Vitória
+Porto Alegre    Campo Grande    1518
 
-['', 'São Paulo', 'Rio de Janeiro'] Vitória
+Porto Alegre    Florianópolis    Curitiba    776
 
-['', 'São Paulo', 'Rio de Janeiro'] Belo Horizonte
+Porto Alegre    Curitiba    Campo Grande    1702
 
-['', 'São Paulo', 'Belo Horizonte'] Vitória
+Porto Alegre    Florianópolis    Curitiba    Campo Grande    1767
 
-['', 'São Paulo', 'Belo Horizonte'] Salvador
+Porto Alegre    Florianópolis    Campo Grande    1774
+
+Porto Alegre    Cuiabá    2206
+
+Porto Alegre    Campo Grande    Cuiabá    2212
+
+Porto Alegre    Florianópolis    Porto Alegre    952
+
+Porto Alegre    Curitiba    Cuiabá    2390
+
+Porto Alegre    Curitiba    Campo Grande    Cuiabá    2396
+
+Porto Alegre    São Paulo    1108
+
+Porto Alegre    Curitiba    Florianópolis    1011
+
+Porto Alegre    Curitiba    São Paulo    1118
+
+Porto Alegre    Florianópolis    Curitiba    Cuiabá    2455
+
+Porto Alegre    Florianópolis    Curitiba    Campo Grande    Cuiabá    2461
+
+Porto Alegre    Florianópolis    Cuiabá    2462
+
+Porto Alegre    Florianópolis    Campo Grande    Cuiabá    2468
+
+Porto Alegre    Florianópolis    Curitiba    Florianópolis    1076
+
+Porto Alegre    Florianópolis    São Paulo    1181
+
+Porto Alegre    Florianópolis    Curitiba    São Paulo    1184
+
+Porto Alegre    Curitiba    Florianópolis    Curitiba    1311
+
+Porto Alegre    São Paulo    Campo Grande    2122
+
+Porto Alegre    Curitiba    São Paulo    Campo Grande    2132
+
+Porto Alegre    Florianópolis    Curitiba    Florianópolis    Curitiba    1376
+
+Porto Alegre    Goiânia    1847
+
+Porto Alegre    Florianópolis    São Paulo    Campo Grande    2195
+
+Porto Alegre    Florianópolis    Curitiba    São Paulo    Campo Grande    2198
+
+Porto Alegre    Curitiba    Goiânia    1897
+
+Porto Alegre    Florianópolis    Curitiba    Goiânia    1962
+
+Porto Alegre    Florianópolis    Goiânia    1969
+
+Porto Alegre    Porto Velho    3662
+
+Porto Alegre    Cuiabá    Porto Velho    3662
+
+Porto Alegre    São Paulo    Curitiba    1516
+
+Porto Alegre    Campo Grande    Porto Velho    3668
+
+Porto Alegre    Campo Grande    Cuiabá    Porto Velho    3668
+
+Porto Alegre    Curitiba    São Paulo    Curitiba    1526
+
+Porto Alegre    Curitiba    Florianópolis    Curitiba    Campo Grande    2302
+
+Porto Alegre    São Paulo    Cuiabá    2722
+
+Porto Alegre    Curitiba    Florianópolis    Campo Grande    2309
+
+Porto Alegre    Curitiba    São Paulo    Cuiabá    2732
+
+Porto Alegre    São Paulo    Goiânia    2034
+
+Porto Alegre    Curitiba    São Paulo    Goiânia    2044
+
+Porto Alegre    Florianópolis    São Paulo    Curitiba    1589
+
+Porto Alegre    Florianópolis    Curitiba    São Paulo    Curitiba    1592
+
+Porto Alegre    Rio Branco    4196
 \end{verbatim}
 
-Esses foram os nós verificados pelo algoritmo na fronteira da árvore de busca. Para cada linha, a lista mostra um histórico de caminho da origem até o nó verificado, e a cidade em seguida da lista mostra a cidade do nó verificado. Percebemos que nosso algoritmo passou pelos nós de SP, BH, RJ, Vitória e, finalmente, Salvador. A última linha mostra o caminho escolhido, passando por SP, BH e indo direto para Salvador, o que faz bastante sentido.
+Esses foram os nós verificados pelo algoritmo na fronteira da árvore de busca. Para cada linha, a lista mostra um histórico de caminho da origem até o nó verificado, e o número é o custo da origem até esse nó pelo caminho escolhido.
+Por exemplo, a última linha do log mostra que o algoritmo escolheu ir de Porto Alegre para Rio branco diretamente, com custo 4196, curiosamente. Isso significa que existe (ou deve existir) uma estrada que liga Porto Alegre a Rio Branco mas que não passa pelas outras capitais.
+
+Um ponto interessante é que, intuitivamente, o caminho mais óbvio seria Porto Alegre, Campo Grande, Cuiabá, Porto Velho e Rio Branco. Inclusive, o algoritmo chega até Porto Velho por esse caminho e encontra um custo de 3668. Considerando que a distância por estradas entre Porto Velho e Rio Branco é de 544, então seguir por esse caminho custaria 4212.
+Ou seja, nosso algoritmo encontrou, realmente, um caminho de menor custo.
