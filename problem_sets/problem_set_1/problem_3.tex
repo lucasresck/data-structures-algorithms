@@ -6,14 +6,7 @@ para esse problema.
 
 \bigskip
 
-\noindent \textbf{Solução:} 
-
-% Comecemos com uma mochila uni-objetivo, por enquanto. Suponhamos que, em um esquema de árvore, computemos todas as possibilidades de mochila na força bruta. Isso é, a ramificação à esquerda do primeiro nó deixa o item 1 de fora, enquanto a ramificação à direita do primeiro nó considera o item 1 na mochila. E assim por diante, para cada item, realizando assim o \textit{branch}.
-
-% Quando se atinge a capacidade máxima da mochila, não precisamos mais continuar seguindo no caminho daquele nó, pois, a cada novo item, ou ele não adiciona nenhum peso, ou ele adiciona algum peso, então toda a subárvore é não viável. Esse é o nosso \textit{bound}.
-
-% Na verdade, podemos tomar uma estratégia mais interessante ainda: podemos utilizar algum outro algoritmo para checar o maior valor que será possível naquela subárvore. Podemos utilizar, por exemplo, uma relaxação do problema da mochila para um problema da mochila ``contínua'', que pode ser resolvida pelo algoritmo de \href{https://en.wikipedia.org/wiki/Continuous_knapsack_problem}{Dantzig}.\href{https://en.wikipedia.org/wiki/Continuous_knapsack_problem}{Dantzig}. De forma bem simples, o algoritmo enche a mochila utilizando quantidades fracionárias dos itens, colocando primeiro na mochila os itens mais ``valiosos'', então ele é tratável. Enquanto buscamos na árvore, mantemos um limitante inferior para o valor da mochila. Nós que possuem o melhor valor pela mochila contínua menor do que o limitante inferior são descartados, afinal, naquela subárvore, não seria possível obter uma solução melhor do que a solução da mochila contínua.
-
+\noindent \textbf{Solução:}
 Inicialmente, vamos tratar da mochila uniobjetivo, para, posteriormente, generalizar o resultado para a mochila multiobjetivo. Para o problema da mochila original (uniobjetivo), podemos encontrar uma solução relaxada utilizando o algoritmo de \href{https://en.wikipedia.org/wiki/Continuous_knapsack_problem}{Dantzig}: um algoritmo guloso que enche a mochila com frações dos itens mais valiosos, ordenados pelo seu custo-benefício (valor dividido por peso), até que a mochila esteja cheia. Caso a solução resultante seja inteira, está tudo certo, e essa é a solução final.
 
 Caso a solução para os itens não seja inteira (mais especificamente, as quantidades dos itens estejam entre $0$ e $w_i$), precisaremos ramificar. Ramificamos no item $i$ que possui o valor fracionário mais próximo de $0.5w_i$, e iniciamos na ramificação $0$ ou $w_i$, dependendo de o valor relaxado estar mais próximo de  $0$ ou $w_i$. Isso descreve completamente a sequência de $branches$.
