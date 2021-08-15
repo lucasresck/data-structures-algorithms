@@ -1,1 +1,24 @@
 \noindent \textbf{Solução:}
+Seja $r \in \{1, \cdots, n\}$ fixo.
+Desaloca-se, aleatoriamente, $r$ tarefas de suas respectivas máquinas (isso equivale a, no vetor representação $\text{\fbox{$j_1$}} \text{\fbox{$j_2$}} \cdots \text{\fbox{$j_n$}}$, substituir $r$ das entradas por um valor vazio).
+Dentre os possíveis planejamentos que contêm o planejamento dado pela representação atual, calcula-se aquele que tem o menor tempo de execução $\min L_j$. Se esse novo planejamento é de alguma forma melhor do que o planejamento da iteração anterior, atualiza-se a solução e repete-se esses passos; em caso negativo, finalizamos o procedimento com a solução anterior. veja o Pseudocódigo \autoref{alg:local_search}.
+
+\begin{algorithm}
+    \caption{Busca local para a alocação de máquinas.}
+    \label{alg:local_search}
+    \begin{algorithmic}
+        \Require $1 \le r \le n$
+        \Require Solução inicial $s_0 = \text{\fbox{$j_1$}} \text{\fbox{$j_2$}} \cdots \text{\fbox{$j_n$}}$
+        \State $s_i \gets s_0$
+        \While{true}
+            \State Desaloca $r$ tarefas de $s_i$
+            \State $s \gets \text{o melhor planejamento possível baseado em $s_i$}$
+            \If{o custo de $s$ é menor do que o de $s_i$}
+                \State $s_i \gets s$
+            \Else
+                \State Break while loop
+            \EndIf
+        \EndWhile
+        \State \Return $s_i$
+    \end{algorithmic}
+\end{algorithm}
