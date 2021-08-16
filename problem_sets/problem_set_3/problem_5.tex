@@ -1,1 +1,4 @@
 \noindent \textbf{Solução:}
+Podemos manter nossa ``lista tabu'' contendo as últimas soluções visitadas pelo algoritmo de busca local. Isso impede que, quando buscando na vizinhança de uma próxima iteração, o algoritmo volte à solução que originou essa iteração.
+
+Uma outra forma de se estruturar os movimentos tabu é, ao invés de impedir o algoritmo de voltar a uma solução antiga, impedi-lo de desalocar ou alocar tarefas que foram desalocadas ou alocadas recentemente, a não ser que esse movimento gere uma solução melhor do que o melhor já encontrado anteriormente (critério clássico de aspiração).
