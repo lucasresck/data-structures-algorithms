@@ -1,1 +1,3 @@
 \noindent \textbf{Solução:}
+Imagine que, na heurística construtiva do Exercício 2, ao invés de alocarmos $t_i$ a alguma máquina na iteração $i$, introduzamos algum tipo de aleatoriedade. Podemos fazer da seguinte forma: na iteração $i$, das $n-i+1$ tarefas restantes, escolhemos as maiores $\lceil \alpha (n-i+1) \rceil$ para formar uma lista de candidatos, e aí sorteamos, nessa lista, aquela tarefa que será alocada.
+$\alpha$ é um parâmetro em $(0, 1)$, que deve ser especificado de antemão.
