@@ -1,1 +1,11 @@
-\noindent \textbf{Solução:}
+\noindent \textbf{Solução:} Lembremos que, no Exercício 1, propusemos a representação $\text{\fbox{$j_1$}} \text{\fbox{$j_2$}} \cdots \text{\fbox{$j_n$}}$, onde a entrada $i$ do vetor significa que a tarefa $i$ está alocada na máquina $j_i$. Dado isso, é bastante conveniente sugerir cruzamentos entre duas soluções. Podemos, por exemplo, utilizar um cruzamento clássico e pegar as $r$ primeiras alocações de um dos pais e a restante do outro pai.
+
+\begin{itemize}
+    \item Pais: $\text{\fbox{$j_1$}} \text{\fbox{$j_2$}} \cdots \text{\fbox{$j_n$}}$ e $\text{\fbox{$k_1$}} \text{\fbox{$k_2$}} \cdots \text{\fbox{$k_n$}}$
+    \item Filhos: $\text{\fbox{$j_1$}} \cdots \text{\fbox{$j_r$}} \text{\fbox{$k_{r+1}$}} \cdots \text{\fbox{$k_n$}}$ e $\text{\fbox{$k_1$}} \cdots \text{\fbox{$k_r$}} \text{\fbox{$j_{r+1}$}} \cdots \text{\fbox{$j_n$}}$
+\end{itemize}
+Uma outra possibilidade, também bastante conveniente, é o cruzamento uniforme, onde o filho, para alocar a tarefa $i$, tem igual chance de escolher a máquina que aloca a tarefa $i$ de qualquer um de seus pais.
+
+Para a estratégia de mutação, podemos simplesmente trocar duas entradas do vetor, ou seja, duas alocações. Por exemplo:
+\[\text{\fbox{$j_1$}} \cdots \text{\fbox{$j_r$}} \cdots \text{\fbox{$j_s$}} \cdots \text{\fbox{$j_n$}} \longrightarrow \text{\fbox{$j_1$}} \cdots \text{\fbox{$j_s$}} \cdots \text{\fbox{$j_r$}} \cdots \text{\fbox{$j_n$}}.\]
+Outras estratégias, como colocar duas entradas do vetor juntas ou inverter a ordem do vetor entre duas entradas específicas (mutações possíveis para o problema do caixeiro viajante), por exemplo, acredito que não sejam adequadas aqui. Isso ocorre porque essas mutações envolvem inverter a ordem de entradas do vetor ou realizar um ``shift'' das posições do vetor, o que potencialmente altera drasticamente a solução. Por exemplo, se invertermos o vetor (entre duas entradas específicas), estamos potencialmente alterando todas as alocações de máquinas para essas tarefas que foram invertidas. Isso é muito mais drástico do que apenas inverter o caminho, como no caso do caixeiro viajante.
