@@ -1,15 +1,16 @@
-Vamos trabalhar o problema da \textbf{\textit{closest string}} (string mais próxima). Dadas $n$ strings de tamanho $m$, $s_1, \cdots, s_n$, buscamos uma nova string $s$ de tamanho $m$ tal que $\text{d}(s_i, s) \le d$, para todo $i \in \{1, \cdots, n\}$, porém com $d$ sendo o menor valor possível. A função $\text{d}(., .)$ é a distância de Hamming, \textit{i.e.}, o número de posições diferentes entre as duas strings. Vamos considerar, neste problema, um alfabeto fixo $\Sigma$.
+Vamos trabalhar o problema da \textbf{\textit{closest string}} (``string mais próxima'', em tradução livre). Dadas $n$ strings de tamanho $m$, $s_1, \cdots, s_n$, buscamos uma nova string $s$ de tamanho $m$ tal que $\text{d}(s_i, s) \le d$, para todo $i \in \{1, \cdots, n\}$, porém com $d$ sendo o menor valor possível. A função $\text{d}(\cdot, \cdot)$ é a distância de Hamming, \textit{i.e.}, o número de posições diferentes entre as duas strings. Vamos considerar, neste problema, um alfabeto fixo $\Sigma$.
+Sendo assim, de forma um pouco mais abstrata, estamos buscando, no espaço métrico $\left(\Sigma^m, \text{d}\right)$ (espaço de Hamming), a menor bola fechada, com centro $s$ e raio $d$, que contém todas as $n$ strings $s_i$.
 
-Vejamos um exemplo. Suponhamos que queremos encontrar a string mais próxima a ambas as palavras GATO, GAME e GAMO. Então é óbvio que a solução será GA\_\_. Nossas opções para a terceira letra são T e M e para a quarta letra são O e E. Para cada combinação, temos o seguinte valor $d$ mínimo:
+Vejamos um exemplo. Suponhamos que queremos encontrar a string mais próxima a ambas as strings \fbox{G}\fbox{A}\fbox{T}\fbox{O}, \fbox{G}\fbox{A}\fbox{M}\fbox{E} e \fbox{G}\fbox{A}\fbox{M}\fbox{O}. Então é óbvio que a solução será \fbox{G}\fbox{A}\fbox{?}\fbox{?}. Nossas opções para a terceira letra são T e M e para a quarta letra são O e E. Para cada combinação, temos o seguinte valor $d$ mínimo:
 \begin{itemize}
-    \item GATO $\Rightarrow 2$
-    \item GATE $\Rightarrow 2$
-    \item GAMO $\Rightarrow 1$
-    \item GAME $\Rightarrow 2$
+    \item \fbox{G}\fbox{A}\fbox{T}\fbox{O} $\Rightarrow 2$
+    \item \fbox{G}\fbox{A}\fbox{T}\fbox{E} $\Rightarrow 2$
+    \item \fbox{G}\fbox{A}\fbox{M}\fbox{O} $\Rightarrow 1$
+    \item \fbox{G}\fbox{A}\fbox{M}\fbox{E} $\Rightarrow 2$
 \end{itemize}
-Ou seja, nossa solução é GAMO.
+Ou seja, nossa solução é \fbox{G}\fbox{A}\fbox{M}\fbox{O}.
 
 O problema da \textit{closest string} é NP-difícil.
-De forma intuitiva, vamos pensar em um problema mais simples, em que o alfabeto é $\Sigma = \{0, 1\}$. Então a string assume a forma $001 \cdots 01$, que, por acaso, é a representação do problema da mochila 0-1. No problema da mochila, você é incentivado a colocar um item pois ele tem valor positivo, mas é desincentivado pois tem peso positivo. Você nunca sabe ``qual vale mais a pena'', se é deixar a mochila mais leve ou mais valiosa. Colocar um item, mesmo que leve e valioso, pode atrapalhar muito os outros itens. Isto é, não se sabe se é possível sacrificar um item para ter um ganho melhor com outros itens. O dilema é parecido nesse caso: você é incentivado a utilizar o caractere 0 pois isso vai se parecer com algumas \textit{strings}, porém é incentivado a utilizar o caractere 1 ao mesmo tempo, pois se parece com outras, e você não sabe qual vale mais a pena. Não se sabe se é possível sacrificar um caractere em uma posição para se ter um ganho melhor com outros caracteres em outras posições.
+De forma intuitiva, vamos pensar em um problema mais simples, em que o alfabeto é $\Sigma = \{0, 1\}$. Então a string assume a forma $001 \cdots 01$, que, por acaso, é a representação do problema da mochila 0-1. No problema da mochila, você é incentivado a colocar um item pois ele tem valor positivo, mas é desincentivado pois tem peso positivo, e há restrição de peso. Você nunca sabe ``qual vale mais a pena'', se é deixar a mochila mais leve ou mais valiosa. Colocar um item, mesmo que leve e valioso, pode atrapalhar muito os outros itens, a ponto de deixar a mochila menos valiosa ao final. Isto é, não se sabe se é possível sacrificar um item para ter um ganho melhor com outros itens. O dilema é parecido nesse caso: você é incentivado a utilizar o caractere 0 pois isso vai se parecer com algumas \textit{strings}, porém é incentivado a utilizar o caractere 1 ao mesmo tempo, pois se parece com outras, e você não sabe qual vale mais a pena. Não se sabe se é possível sacrificar um caractere em uma posição para se ter um ganho melhor com outros caracteres em outras posições, e vice-versa.
 
-Claro, essa intuição não prova nada. Uma demonstração da NP-dificuldade do problema é dada por \cite{frances1997covering}, e não é nada trivial.
+Claro, essa intuição não prova nada. Uma demonstração da NP-dificuldade do problema é dada por \cite{frances1997covering}. A demonstração não é trivial, e não cabe neste trabalho.

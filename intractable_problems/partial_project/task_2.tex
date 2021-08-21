@@ -1,9 +1,31 @@
-O problema é NP-difícil, então não precisamos ter medo de algoritmos com complexidade exponencial. Vamos propor aqui um algoritmo de força bruta, que testa todas as soluções possíveis que faz sentido serem testadas.
+O problema é NP-difícil, então não precisamos ter medo de algoritmos com complexidade exponencial. Vamos propor aqui um algoritmo de força bruta, que testa todas as soluções possíveis, porém dentre aquelas que fazem sentido serem testadas.
 
 Sejam $s_1, \cdots, s_n$ as $n$ strings de tamanho $m$. Então, para cada posição $i$, a string $s$ pode assumir algum dos valores $S_i = \left\{s_1[i], \cdots, s_n[i]\right\}$. Nosso algoritmo será aquele que testa cada uma das combinações possíveis com $S_1$ para a posição 1 de $s$, $S_2$ para a posição 2 de $s$, $\cdots$, $S_m$ para a posição $m$ de $s$, e no final escolhe a melhor das soluções. Na verdade, é mais prático manter uma variável indicando a melhor das soluções durante a iteração e atualizando-a quando necessário.
 
-Para uma determinada posição $i$, $S_i = \{s_1[i], \cdots, s_n[i]\}$ é todo o alfabeto $\Sigma$, no pior caso. Logo, como são $m$ posições, o número de combinações possíveis para $s$ é $O(|\Sigma|^m)$.
+Para montar os conjuntos $S_i$, existe um custo $O(mn)$. Para uma determinada posição $i$, $S_i = \{s_1[i], \cdots, s_n[i]\}$ é todo o alfabeto $\Sigma$, no pior caso. Logo, como são $m$ posições, o número de combinações possíveis para $s$ é $O(|\Sigma|^m)$.
 
 Para cada combinação de $s$, são necessários $n$ cálculos de distância de Hamming com as outras strings $s_i$, que, cada um, toma tempo $O(m)$.
 Depois de calcular todos os $\text{d}(s, s_i)$, precisamos encontrar o maior desses valores, o que pode ser feito em tempo linear.
-Ou seja, esse algoritmo tem complexidade $O((mn+n)|\Sigma|^m) = O(mn|\Sigma|^m)$.
+Ou seja, esse algoritmo tem complexidade $O(mn + (mn+n)|\Sigma|^m) = O(mn|\Sigma|^m)$.
+
+\begin{algorithm}
+    \caption{Algoritmo exato para o problema da \textit{closest string}.}
+    \label{alg:local_search}
+    \begin{algorithmic}
+        \Require Strings $s_1, \cdots, s_n$ de tamanho $m$
+        \State Cria os conjuntos $S_i = \left\{s_1[i], \cdots, s_n[i]\right\}$, para cada $i$
+        \State Inicializa uma solução qualquer $s_0$
+        \State Calcula o valor $d_0$ da solução $s_0$
+        \For{cada combinação possível de $s$, com $s[i] \in S_i$}
+            \For{$s_i$}
+                \State $d_i \gets \text{d}(s, s_i)$
+            \EndFor
+            \State $d \gets \max d_i$
+            \If{$d < d_0$}
+                \State $s_0 \gets s$
+                \State $d_0 \gets d$
+            \EndIf
+        \EndFor
+        \State \Return $s, d$
+    \end{algorithmic}
+\end{algorithm}
