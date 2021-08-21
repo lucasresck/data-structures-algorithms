@@ -3,7 +3,7 @@ A implementação do algoritmo não é trivial e acredito que esteja um pouco al
 
 Vamor propor e implementar, nesta tarefa, um algoritmo no estilo \textit{branch and bound}, que nos permita explorar todas as soluções, porém ignorar aquelas em que temos certeza que não são boas o suficiente. Imagine que o Algoritmo \ref{alg:local_search} funcione a partir de ramificações. Ou seja, o primeiro nó da árvore é vazio e possui como filhos todas as possibilidades para a primeira letra; escolhido um filho, seus filhos possuem todas as possibilidades para a segunda letra; e assim por diante, como na \autoref{fig:tree}. Esse é o \textit{branch}.
 
-\begin{figure}[!h]
+\begin{figure}[H]
     \centering
     \includegraphics[width=0.6\linewidth]{tree.png}
     \caption{Exemplo de árvore.}
@@ -18,7 +18,7 @@ sendo a primeira desigualdade justificada pelo fato de que $s^\ast$ minimiza a s
 Ou seja, a soma das distâncias de Hamming a $s^\ast$ (a string de $i+1$ a $m$ que toma as letras mais comuns) sobre $n$ é um lower bound para o custo ótimo de uma subárvore, ignorando as $i$ primeiras posições. Isso, somado ao custo das $i$ primeiras posições, nos dá um \textit{lower bound} para o custo ótimo de uma subárvore. Sendo assim, não precisamos explorá-la caso já tenhamos uma solução melhor.
 O Algoritmo \ref{alg:tree} descreve um pseudocódigo para essa solução.
 
-\begin{algorithm}[!h]
+\begin{algorithm}[H]
     \caption{Algoritmo \textit{branch and bound} para o problema da \textit{closest string}.}
     \label{alg:tree}
     \begin{algorithmic}
