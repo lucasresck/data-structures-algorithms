@@ -6,7 +6,12 @@ class ClosestStringTree:
     in a tree approach, using branch and bound.
 
     Args:
-        strings (list of str): list of strings for the problem.
+        strings (list of str): List of strings for the problem.
+
+    Attributes:
+        S (list of set of str): Contain the possible characters for each position
+        costs (list of int): The cost for each position in relation to the
+            most common character
     '''
     def __init__(self, strings):
         self.strings = strings.copy()
@@ -15,6 +20,19 @@ class ClosestStringTree:
         for string in self.strings:
             assert len(string) == self.m
 
+        self.characters()
+        
+        # Initial solution
+        self.s = 'a'*self.m
+        self.d = self.cost(self.s)      
+        
+        self.iterations = 0
+        self.branch()
+        self.report()
+
+    def characters(self):
+        '''Extract the characters and also calculate the cost of each position,
+        in relation to the most common character for that position.'''
         self.S = []
         self.costs = []
         for i in range(self.m):
@@ -25,14 +43,6 @@ class ClosestStringTree:
             cost = sum([most_common != c for c in S_i])
             self.costs.append(cost)
             self.S.append(set(S_i))      
-        
-        # Initial solution
-        self.s = 'a'*self.m
-        self.d = self.cost(self.s)      
-        
-        self.iterations = 0
-        self.branch()
-        self.report()
     
     def branch(self, s=''):
         '''Branch the tree.
@@ -50,7 +60,6 @@ class ClosestStringTree:
                 self.s = s
             return
         if self.best_cost(s) > self.d:
-#             print('here')
             # Bound
             return
         S_i = self.S[i]
@@ -67,9 +76,9 @@ class ClosestStringTree:
         Returns:
             cost (int): A lower bound for the optimal cost of the subtree
         '''
-        start = len(s)
-        actual_cost = self.cost(s, [string[:start] for string in self.strings])
-        best_after_cost = math.ceil(sum(self.costs[start:])/(self.m - start))
+        i = len(s)
+        actual_cost = self.cost(s, [string[:i] for string in self.strings])
+        best_after_cost = math.ceil(sum(self.costs[i:])/(self.m - i))
         return actual_cost + best_after_cost
             
     def cost(self, s, strings=None):
@@ -84,9 +93,8 @@ class ClosestStringTree:
             cost (int): Cost of the string
         '''
         if strings is None:
-            ds = [self.hamming(s, s_i) for s_i in self.strings]
-        else:
-            ds = [self.hamming(s, s_i) for s_i in strings]
+            strings = self.strings
+        ds = [self.hamming(s, s_i) for s_i in strings]
         return max(ds)
     
     def hamming(self, s_1, s_2):
