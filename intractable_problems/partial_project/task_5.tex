@@ -44,3 +44,12 @@ Para introduzirmos a aleatoriedade, podemos restringir uma lista por tamanho, so
 Construir os conjuntos $S_i$ de candidatos tem complexidade $O(nm\ln m)$, por causa do ordenamento. A construção aleatória toma tempo linear em $m$, pois cada sorteio é constante. A busca local testa todas as possibilidades para os $r$ elementos faltantes. No pior caso, são $|\Sigma|^r$ possibilidades, onde cada uma toma tempo $O(mn)$ para o cálculo do custo $d$. Atualizar a solução envolve calcular o custo em tempo $O(mn)$. Finalmente, se $N = \text{número de iterações}$, então temos como complexidade para nosso algoritmo
 \[O(nm\ln m + N(m + mn|\Sigma|^r + mn)) = O(nm\ln m + Nmn|\Sigma|^r).\]
 Assumimos, a princípio, que $\Sigma$ é fixo; $N, r$ são parâmetros fixos também. Logo, a complexidade final do algoritmo é $O(nm\ln m)$.
+
+Vejamos um exemplo de aplicação da nossa meta-heurística. Suponhamos que possuímos as seguintes sequências de DNA:
+\begin{itemize}
+    \item \fbox{A}\fbox{T}\fbox{C}\fbox{T}\fbox{A}\fbox{\color{blue}{T}}\fbox{A}\fbox{G}\fbox{\color{blue}{A}}\fbox{A}\fbox{\color{blue}{G}}\fbox{\color{blue}{T}}
+    \item \fbox{A}\fbox{T}\fbox{C}\fbox{T}\fbox{A}\fbox{\color{blue}{C}}\fbox{A}\fbox{G}\fbox{\color{blue}{T}}\fbox{A}\fbox{\color{blue}{A}}\fbox{\color{blue}{C}}
+    \item \fbox{A}\fbox{T}\fbox{C}\fbox{T}\fbox{A}\fbox{\color{blue}{C}}\fbox{A}\fbox{G}\fbox{\color{blue}{A}}\fbox{A}\fbox{\color{blue}{G}}\fbox{\color{blue}{T}}
+    \item \fbox{A}\fbox{T}\fbox{C}\fbox{T}\fbox{A}\fbox{\color{blue}{T}}\fbox{A}\fbox{G}\fbox{\color{blue}{A}}\fbox{A}\fbox{\color{blue}{G}}\fbox{\color{blue}{T}}
+\end{itemize}
+As posições em azul correspondem àquelas que contém letras diferentes entre as strings. Aplicando nossa meta-heurística GRASP, conseguimos o resultado \fbox{A}\fbox{T}\fbox{C}\fbox{T}\fbox{A}\fbox{\color{blue}{C}}\fbox{A}\fbox{G}\fbox{\color{blue}{A}}\fbox{A}\fbox{\color{blue}{G}}\fbox{\color{blue}{C}}, com custo de $d=2$. 
