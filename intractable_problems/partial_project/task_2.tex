@@ -5,7 +5,7 @@ Sejam $s_1, \cdots, s_n$ as $n$ strings de tamanho $m$. Então, para cada posiç
 Para montar os conjuntos $S_i$, existe um custo $O(mn)$. Para uma determinada posição $i$, $S_i = \{s_1[i], \cdots, s_n[i]\}$ é todo o alfabeto $\Sigma$, no pior caso. Logo, como são $m$ posições, o número de combinações possíveis para $s$ é $O(|\Sigma|^m)$.
 
 Para cada combinação de $s$, são necessários $n$ cálculos de distância de Hamming com as outras strings $s_i$, que, cada um, toma tempo $O(m)$.
-Depois de calcular todos os $\text{d}(s, s_i)$, precisamos encontrar o maior desses valores, o que pode ser feito em tempo linear.
+Depois de calcular todos os $\text{d}(s, s_i)$, precisamos encontrar o maior desses valores, o que pode ser feito em tempo linear $O(n)$.
 Ou seja, esse algoritmo tem complexidade $O(mn + (mn+n)|\Sigma|^m) = O(mn|\Sigma|^m)$.
 
 \begin{algorithm}
