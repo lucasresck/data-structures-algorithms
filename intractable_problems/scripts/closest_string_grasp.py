@@ -1,3 +1,6 @@
+import math
+import numpy as np
+
 class ClosestStringGRASP:
     '''
     GRASP approach to solve closest string problem.
@@ -22,15 +25,18 @@ class ClosestStringGRASP:
         # Initial solution
         self.solution = 'a'*self.m
         
+        self.candidates()
+        self.GRASP()
+        self.report()
+        
+    def candidates(self):
+        '''Generate the candidates for each position.'''
         self.S = []
         for i in range(self.m):
             S_i = []
             for j in range(self.n):
                 S_i.append(self.strings[j][i])
             self.S.append(S_i)
-        
-        self.GRASP()
-        self.report()
         
     def GRASP(self):
         '''GRASP main function.'''
@@ -98,7 +104,18 @@ class ClosestStringGRASP:
     
     def update_solution(self, solution):
         '''Update solution if it is a better one.'''
-        self.solution = solution
+        if self.cost(solution) < self.cost(self.solution):
+            self.solution = solution
     
     def report(self):
         print('Solution is {}.'.format(self.solution))
+        print('The cost is {}.'.format(self.cost(self.solution)))
+
+def main():
+    parser = argparse.ArgumentParser(description='Closest string problem using GRASP.')
+    parser.add_argument('--strings', nargs='+', help='Strings for the problem.')
+    args = parser.parse_args()
+    ClosestStringGRASP(args.strings)
+
+if __name__ == '__main__':
+    main()
