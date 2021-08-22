@@ -1,7 +1,7 @@
 No que diz respeito a algoritmos de aproximação, \cite{li2002closest} propôs, e demonstrou, uma aproximação em tempo polinomial com razão de aproximação $1 + \epsilon$ para o problema da \textit{closest string}, como descrito na Tarefa 1.
 A implementação do algoritmo não é trivial e acredito que esteja um pouco além do que é requerido por este trabalho. Além disso, não existe uma implementação desse algoritmo acessível, então decidi por não me estender muito nesse resultado.
 
-Vamor propor e implementar, nesta tarefa, um algoritmo no estilo \textit{branch and bound}, que nos permita explorar todas as soluções, porém ignorar aquelas em que temos certeza que não são boas o suficiente. Imagine que o Algoritmo \ref{alg:local_search} funcione a partir de ramificações. Ou seja, o primeiro nó da árvore é vazio e possui como filhos todas as possibilidades para a primeira letra; escolhido um filho, seus filhos possuem todas as possibilidades para a segunda letra; e assim por diante, como na \autoref{fig:tree}. Esse é o \textit{branch}.
+Vamor propor e implementar, nesta tarefa, um algoritmo no estilo \textit{branch and bound}, que nos permita explorar todas as soluções, porém ignorar aquelas em que temos certeza que não são boas o suficiente. Imagine que o Algoritmo \ref{alg:exact} funcione a partir de ramificações. Ou seja, o primeiro nó da árvore é vazio e possui como filhos todas as possibilidades para a primeira letra; escolhido um filho, seus filhos possuem todas as possibilidades para a segunda letra; e assim por diante, como na \autoref{fig:tree}. Esse é o \textit{branch}.
 
 \begin{figure}[H]
     \centering
@@ -57,3 +57,7 @@ A implementação do Algoritmo \ref{alg:tree} for realizada em Python, podendo s
 \[\overset{\underbrace{\text{\fbox{G}\fbox{A}\fbox{M}\fbox{O}}\cdots\text{\fbox{G}\fbox{A}\fbox{M}\fbox{O}}}}{\text{8 vezes}}\]
 obtemos 
 \[\overset{\underbrace{\text{\fbox{G}\fbox{A}\fbox{M}\fbox{O}}\cdots\text{\fbox{G}\fbox{A}\fbox{M}\fbox{O}}}}{\text{8 vezes}}\] em 28779 iterações. Um ponto importante é que, sem o \textit{bound}, esse número se torna 174761, significantemente maior.
+
+A corretude do algoritmo é direta, pois é herdada do algoritmo da Tarefa 2 (que é exato) juntamente com a corretude do \textit{bound}, como discutido anteriormente. Porém, esse processo de \textit{bound} não garante que um número significativo de casos será eliminado: ainda, no pior caso, poderíamos passar por todos os nós.
+Note que nosso Algoritmo \ref{alg:tree} é essencialmente o Algoritmo \ref{alg:exact}, porém no formato de árvore (com recursões), além do fato de que são calculados os lower bounds. O cálculo do lower bound tem complexidade $O(nm + m)$\footnote{Para perceber isso, veja que a primeira parcela se refere ao custo atual até a posição $i$, enquanto a segunda parcela se refere ao lower bound a partir da posição $i+1$. Esse custo é linear, pois é possível ter os ``custos de cada posição'' previamente calculados. Para mais detalhes, por favor, conferir a implementação.}.
+Como a quantidade de nós é $O(|\Sigma|^m)$, isso faz com que a complexidade do algoritmo continue a mesma da Tarefa 2: $O(mn|\Sigma|^m)$.
