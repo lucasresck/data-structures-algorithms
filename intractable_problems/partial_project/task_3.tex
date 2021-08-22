@@ -50,3 +50,10 @@ O Algoritmo \ref{alg:tree} descreve um pseudocódigo para essa solução.
         \EndProcedure
     \end{algorithmic}
 \end{algorithm}
+
+A implementação do Algoritmo \ref{alg:tree} for realizada em Python, podendo ser conferida \href{https://github.com/lucasresck/data-structures-algorithms/blob/main/intractable_problems/scripts/closest_string_tree.py}{neste link}. Por exemplo, se pedirmos ao programa qual a \textit{closest string} para 
+\[\overset{\underbrace{\text{\fbox{G}\fbox{A}\fbox{T}\fbox{O}}\cdots\text{\fbox{G}\fbox{A}\fbox{T}\fbox{O}}}}{\text{8 vezes}}\]
+\[\overset{\underbrace{\text{\fbox{G}\fbox{A}\fbox{M}\fbox{E}}\cdots\text{\fbox{G}\fbox{A}\fbox{M}\fbox{E}}}}{\text{8 vezes}}\]
+\[\overset{\underbrace{\text{\fbox{G}\fbox{A}\fbox{M}\fbox{O}}\cdots\text{\fbox{G}\fbox{A}\fbox{M}\fbox{O}}}}{\text{8 vezes}}\]
+obtemos 
+\[\overset{\underbrace{\text{\fbox{G}\fbox{A}\fbox{M}\fbox{O}}\cdots\text{\fbox{G}\fbox{A}\fbox{M}\fbox{O}}}}{\text{8 vezes}}\] em 28779 iterações. Um ponto importante é que, sem o \textit{bound}, esse número se torna 174761, significantemente maior.
