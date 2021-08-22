@@ -1,0 +1,6 @@
+Dada a busca local da Tarefa 4, é bastante conveniente aplicar aqui a meta-heurística GRASP. Não existe muito segredo: vamos construir uma heurística construtiva (aleatoriezada), aplicar a nossa busca local algumas vezes e repetir todo esse processo algumas boas vezes.
+
+Iniciamos pela construção da heurística construtiva. Uma forma muito intuitiva é inicializar uma solução que possui, em cada posição, aquela letra que mais se repete na mesma posição das outras strings. Então, no nosso clássico exemplo, teríamos as strings
+\fbox{G}\fbox{A}\fbox{T}\fbox{O}, \fbox{G}\fbox{A}\fbox{M}\fbox{E} e \fbox{G}\fbox{A}\fbox{M}\fbox{O},
+que resultariam em uma solução inicial \fbox{G}\fbox{A}\fbox{M}\fbox{O}. Coincidentemente (ou não), essa é a solução ótima para esse exemplo.
+Para introduzirmos a aleatoriedade, podemos restringir uma lista por tamanho, sorteando entre os caracteres que mais se repetem, controlando esse sorteio por meio de um parâmetro $\alpha$.
