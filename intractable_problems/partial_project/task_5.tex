@@ -27,7 +27,7 @@ Para introduzirmos a aleatoriedade, podemos restringir uma lista por tamanho, so
         \Procedure{construcaoAleatoria}{}
             \State $s \gets \text{empty string}$
             \For{cada posição $1 \le i \le m$}
-                \State $s_i \gets$ sorteia dentre os $\alpha|S_i|$ candidatos que mais se repetem
+                \State $s_i \gets$ sorteia dentre os $\alpha|S_i|$ candidatos de $S_i$ que mais se repetem
                 \State $s \gets s + s_i$
             \EndFor
             \State \Return $s$
@@ -35,7 +35,7 @@ Para introduzirmos a aleatoriedade, podemos restringir uma lista por tamanho, so
         \State
         \Procedure{buscaLocal}{$s$}
             \State Apaga aleatoriamente $r$ caracteres de $s$
-            \State $s \gets$ busca pela solução que melhor preenche $s$ \Comment{Possivelmente uma recursão.}
+            \State $s \gets$ busca pela solução que melhor preenche $s$ \Comment{Potencialmente uma recursão.}
             \State \Return $s$
         \EndProcedure
     \end{algorithmic}
@@ -45,7 +45,7 @@ A implementação do Algoritmo \ref{alg:grasp} for realizada em Python, podendo 
 
 Construir os conjuntos $S_i$ de candidatos tem complexidade $O(nm\ln m)$, por causa do ordenamento. A construção aleatória toma tempo linear em $m$, pois cada sorteio é constante. A busca local testa todas as possibilidades para os $r$ elementos faltantes. No pior caso, são $|\Sigma|^r$ possibilidades, onde cada uma toma tempo $O(mn)$ para o cálculo do custo $d$. Atualizar a solução envolve calcular o custo em tempo $O(mn)$. Finalmente, se $N = \text{número de iterações}$, então temos como complexidade para nosso algoritmo
 \[O(nm\ln m + N(m + mn|\Sigma|^r + mn)) = O(nm\ln m + Nmn|\Sigma|^r).\]
-Assumimos, a princípio, que $\Sigma$ é fixo; $N, r$ são parâmetros fixos também. Logo, a complexidade final do algoritmo é $O(nm\ln m)$.
+Assumimos, a princípio, que $\Sigma$ é fixo (Tarefa 1); $N, r$ são parâmetros fixos também. Logo, a complexidade final do algoritmo é $O(nm\ln m)$.
 
 Vejamos um exemplo de aplicação da nossa meta-heurística. Suponhamos que possuímos as seguintes sequências de DNA:
 \begin{itemize}
