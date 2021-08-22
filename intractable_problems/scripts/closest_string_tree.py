@@ -60,7 +60,7 @@ class ClosestStringTree:
                 self.d = d
                 self.s = s
             return
-        if self.best_cost(s) > self.d:
+        if self.best_cost(s) >= self.d:
             # Bound
             return
         S_i = self.S[i]
@@ -78,24 +78,22 @@ class ClosestStringTree:
             cost (int): A lower bound for the optimal cost of the subtree
         '''
         i = len(s)
-        actual_cost = self.cost(s, [string[:i] for string in self.strings])
-        best_after_cost = math.ceil(sum(self.costs[i:])/(self.m - i))
-        return actual_cost + best_after_cost
+        hamming_sum = sum([self.hamming(s, s_i[:i]) for s_i in self.strings])
+        hamming_sum += sum(self.costs[i:])
+        hamming_mean = hamming_sum/self.n
+        return math.ceil(hamming_mean)
             
-    def cost(self, s, strings=None):
+    def cost(self, s):
         '''Calculate cost of string s, the maximum Hamming distance to one
         of the initial strings.
 
         Args:
             s (str): String to have cost calculated
-            strings (list of str): Optional list of strings to base the calculation
 
         Returns:
             cost (int): Cost of the string
         '''
-        if strings is None:
-            strings = self.strings
-        ds = [self.hamming(s, s_i) for s_i in strings]
+        ds = [self.hamming(s, s_i) for s_i in self.strings]
         return max(ds)
     
     def hamming(self, s_1, s_2):
