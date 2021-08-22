@@ -41,6 +41,8 @@ Para introduzirmos a aleatoriedade, podemos restringir uma lista por tamanho, so
     \end{algorithmic}
 \end{algorithm}
 
+A implementação do Algoritmo \ref{alg:grasp} for realizada em Python, podendo ser conferida \href{https://github.com/lucasresck/data-structures-algorithms/blob/main/intractable_problems/scripts/closest_string_grasp.py}{neste link}.
+
 Construir os conjuntos $S_i$ de candidatos tem complexidade $O(nm\ln m)$, por causa do ordenamento. A construção aleatória toma tempo linear em $m$, pois cada sorteio é constante. A busca local testa todas as possibilidades para os $r$ elementos faltantes. No pior caso, são $|\Sigma|^r$ possibilidades, onde cada uma toma tempo $O(mn)$ para o cálculo do custo $d$. Atualizar a solução envolve calcular o custo em tempo $O(mn)$. Finalmente, se $N = \text{número de iterações}$, então temos como complexidade para nosso algoritmo
 \[O(nm\ln m + N(m + mn|\Sigma|^r + mn)) = O(nm\ln m + Nmn|\Sigma|^r).\]
 Assumimos, a princípio, que $\Sigma$ é fixo; $N, r$ são parâmetros fixos também. Logo, a complexidade final do algoritmo é $O(nm\ln m)$.
