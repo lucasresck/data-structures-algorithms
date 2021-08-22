@@ -1,3 +1,4 @@
+import argparse
 import math
 
 class ClosestStringTree:
@@ -106,3 +107,12 @@ class ClosestStringTree:
         print('The solution is {}.'.format(self.s))
         print('The cost is {}.'.format(self.d))
         print('The number of iterations was {}.'.format(self.iterations))
+
+def main():
+    parser = argparse.ArgumentParser(description='Closest string problem using branch and bound.')
+    parser.add_argument('--strings', nargs='+', help='Strings for the problem.')
+    args = parser.parse_args()
+    ClosestStringTree(args.strings)
+
+if __name__ == '__main__':
+    main()
