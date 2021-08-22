@@ -37,6 +37,7 @@ class ClosestStringGRASP:
             S_i = []
             for j in range(self.n):
                 S_i.append(self.strings[j][i])
+            S_i = sorted(set(S_i), key=S_i.count, reverse=True)
             self.S.append(S_i)
         
     def GRASP(self):
@@ -55,7 +56,7 @@ class ClosestStringGRASP:
         solution = ''
         for i in range(self.m):
             candidates = self.S[i]
-            candidates = sorted(set(candidates), key=candidates.count, reverse=True)
+            # candidates = sorted(set(candidates), key=candidates.count, reverse=True)
             n = math.ceil(len(candidates)*self.alpha)
             # Restricted candidates list
             RCL = candidates[:n]
