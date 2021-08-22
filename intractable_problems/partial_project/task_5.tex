@@ -3,4 +3,44 @@ Dada a busca local da Tarefa 4, é bastante conveniente aplicar aqui a meta-heur
 Iniciamos pela construção da heurística construtiva. Uma forma muito intuitiva é inicializar uma solução que possui, em cada posição, aquela letra que mais se repete na mesma posição das outras strings. Então, no nosso clássico exemplo, teríamos as strings
 \fbox{G}\fbox{A}\fbox{T}\fbox{O}, \fbox{G}\fbox{A}\fbox{M}\fbox{E} e \fbox{G}\fbox{A}\fbox{M}\fbox{O},
 que resultariam em uma solução inicial \fbox{G}\fbox{A}\fbox{M}\fbox{O}. Coincidentemente (ou não), essa é a solução ótima para esse exemplo.
-Para introduzirmos a aleatoriedade, podemos restringir uma lista por tamanho, sorteando entre os caracteres que mais se repetem, controlando esse sorteio por meio de um parâmetro $\alpha$.
+Para introduzirmos a aleatoriedade, podemos restringir uma lista por tamanho, sorteando entre os caracteres que mais se repetem, controlando esse sorteio por meio de um parâmetro $\alpha$. O Algoritmo \ref{alg:grasp} descreve esse raciocínio com maiores detalhes.
+
+\begin{algorithm}
+    \caption{Meta-heurística GRASP para o problema da \textit{closest string}.}
+    \label{alg:grasp}
+    \begin{algorithmic}
+        \Require Strings $s_1, \cdots, s_n$ de tamanho $m$
+        \Require Número de iterações
+        \Require Parâmetros $\alpha, r$
+        \State Cria os conjuntos $S_i = \left\{s_1[i], \cdots, s_n[i]\right\}$, para cada $i$
+        \State Ordena os elementos de $S_i$ pelo número de repetições
+        \State Remove elementos repetidos de $S_i$
+        \State Inicializa uma solução qualquer $s_0$
+        \For{número de iterações}
+            \State $s \gets \textsc{construcaoAleatoria()}$
+            \State $s \gets \textsc{buscaLocal($s$)}$
+            \State $s_0 \gets \textsc{atualizaSolucao($s$)}$
+        \EndFor
+        \State $d_0 \gets \text{custo de } s_0$
+        \State \Return $s_0, d_0$
+        \State
+        \Procedure{construcaoAleatoria}{}
+            \State $s \gets \text{empty string}$
+            \For{cada posição $1 \le i \le m$}
+                \State $s_i \gets$ sorteia dentre os $\alpha|S_i|$ candidatos que mais se repetem
+                \State $s \gets s + s_i$
+            \EndFor
+            \State \Return $s$
+        \EndProcedure
+        \State
+        \Procedure{buscaLocal}{$s$}
+            \State Apaga aleatoriamente $r$ caracteres de $s$
+            \State $s \gets$ busca pela solução que melhor preenche $s$ \Comment{Possivelmente uma recursão.}
+            \State \Return $s$
+        \EndProcedure
+    \end{algorithmic}
+\end{algorithm}
+
+Construir os conjuntos $S_i$ de candidatos tem complexidade $O(nm\ln m)$, por causa do ordenamento. A construção aleatória toma tempo linear em $m$, pois cada sorteio é constante. A busca local testa todas as possibilidades para os $r$ elementos faltantes. No pior caso, são $|\Sigma|^r$ possibilidades, onde cada uma toma tempo $O(mn)$ para o cálculo do custo $d$. Atualizar a solução envolve calcular o custo em tempo $O(mn)$. Finalmente, se $N = \text{número de iterações}$, então temos como complexidade para nosso algoritmo
+\[O(nm\ln m + N(m + mn|\Sigma|^r + mn)) = O(nm\ln m + Nmn|\Sigma|^r).\]
+Assumimos, a princípio, que $\Sigma$ é fixo; $N, r$ são parâmetros fixos também. Logo, a complexidade final do algoritmo é $O(nm\ln m)$.
