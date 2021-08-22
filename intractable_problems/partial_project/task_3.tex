@@ -1,4 +1,4 @@
-No que diz respeito a algoritmos de aproximação, \citeauthor{li2002closest} propôs, e demonstrou, uma aproximação em tempo polinomial com razão de aproximação $1 + \epsilon$ para o problema da \textit{closest string} \cite{li2002closest}, como descrito na Tarefa 1.
+No que diz respeito a algoritmos de aproximação, \citeauthor{li2002closest} propuseram, e demonstraram, uma aproximação em tempo polinomial com razão de aproximação $1 + \epsilon$ para o problema da \textit{closest string} \cite{li2002closest}, como descrito na Tarefa 1.
 A implementação do algoritmo não é trivial e acredito que esteja um pouco além do que é requerido por este trabalho. Além disso, não existe uma implementação desse algoritmo acessível, então decidi por não me estender muito nesse resultado.
 
 Vamor propor e implementar, nesta tarefa, um algoritmo no estilo \textit{branch and bound}, que nos permita explorar todas as soluções, porém ignorar aquelas em que temos certeza que não são boas o suficiente. Imagine que o Algoritmo \ref{alg:exact} funcione a partir de ramificações. Ou seja, o primeiro nó da árvore é vazio e possui como filhos todas as possibilidades para a primeira letra; escolhido um filho, seus filhos possuem todas as possibilidades para a segunda letra; e assim por diante, como na \autoref{fig:tree}. Esse é o \textit{branch}.
@@ -10,12 +10,12 @@ Vamor propor e implementar, nesta tarefa, um algoritmo no estilo \textit{branch 
     \label{fig:tree}
 \end{figure}
 
-Para saber se é válido explorar uma subárvore, isto é, quando realizar o \textit{bound}, vamos utilizar um \textit{lower bound} para o menor custo $d$ em uma subárvore. Note que, em um nó com as $i$ primeiras letras definidas, temos o custo dessas $i$ primeiras letras já calculado; precisamos nos preocupar apenas com as $m-i$ letras restantes, isto é, $s[i+1:m]$. Note que, se quisermos minimizar a soma das distâncias de Hamming de $s[i+1:m]$ às strings $s_1[i+1:m], \cdots, s_n[i+1:m]$, basta que tomemos, em cada posição, aquela letra mais comum para aquela posição. Seja essa a string $s^\ast$. Ora, se $d_{OPT}$ é custo mínimo ótimo para as strings $s_1[i+1:m], \cdots, s_n[i+1:m]$, com centro $s^{\ast\ast}$, então vale que $\text{d}(s^{\ast\ast}, s_i[i+1:m]) \le d_{OPT}$ para todo $j$, de forma que
-\[\sum_j \text{d}(s^{\ast\ast}, s_j[i+1:m]) \le n d_{OPT},\]
+Para saber se é válido explorar uma subárvore, isto é, quando realizar o \textit{bound}, vamos utilizar um \textit{lower bound} para o menor custo $d$ em uma subárvore. Note que, em um nó com as $i$ primeiras letras definidas, temos o custo dessas $i$ primeiras letras já calculado; precisamos nos preocupar apenas com as $m-i$ letras restantes, isto é, $s[i+1:m]$. Note que, se quisermos minimizar a soma das distâncias de Hamming de $s$ às strings $s_1, \cdots, s_n$, sob a condição das $i$ primeiras letras fixas, basta que tomemos, em cada posição de $i+1$ a $m$, aquela letra mais comum para aquela posição. Seja essa a string $s^\ast$, isto é, $s^\ast$ toma as $i$ primeiras letras definidas pelo nó e o restante é definido pela letra mais comum àquela posição. Ora, se $d_{OPT}$ é custo mínimo ótimo para as strings $s_1, \cdots, s_n$, com centro $s^{\ast\ast}$, então vale que $\text{d}(s^{\ast\ast}, s_i) \le d_{OPT}$ para todo $j$, de forma que
+\[\sum_j \text{d}(s^{\ast\ast}, s_j) \le n d_{OPT},\]
 e, finalmente,
-\[\frac{\sum_j \text{d}(s^{\ast}, s_j[i+1:m])}{n} \le \frac{\sum_j \text{d}(s^{\ast\ast}, s_j[i+1:m])}{n} \le d_{OPT},\]
+\[\frac{\sum_j \text{d}(s^{\ast}, s_j)}{n} \le \frac{\sum_j \text{d}(s^{\ast\ast}, s_j)}{n} \le d_{OPT},\]
 sendo a primeira desigualdade justificada pelo fato de que $s^\ast$ minimiza a soma das distâncias de Hamming.
-Ou seja, a soma das distâncias de Hamming a $s^\ast$ (a string de $i+1$ a $m$ que toma as letras mais comuns) sobre $n$ é um lower bound para o custo ótimo de uma subárvore, ignorando as $i$ primeiras posições. Isso, somado ao custo das $i$ primeiras posições, nos dá um \textit{lower bound} para o custo ótimo de uma subárvore. Sendo assim, não precisamos explorá-la caso já tenhamos uma solução melhor.
+Ou seja, a média das distâncias de Hamming a $s^\ast$ é um lower bound para o custo ótimo de uma subárvore. Sendo assim, não precisamos explorá-la caso já tenhamos uma solução melhor.
 O Algoritmo \ref{alg:tree} descreve um pseudocódigo para essa solução.
 
 \begin{algorithm}[H]
@@ -41,7 +41,7 @@ O Algoritmo \ref{alg:tree} descreve um pseudocódigo para essa solução.
                 \State \Return
             \EndIf
             \State $l \gets$ \textit{lower bound} para o custo mínimo de $s$ \Comment{Aqui usamos o que foi descrito na solução.}
-            \If{$l > d_0$}
+            \If{$l \ge d_0$}
                 \State \Return
             \EndIf
             \For{char $\in S_i$}
@@ -56,7 +56,7 @@ A implementação do Algoritmo \ref{alg:tree} for realizada em Python, podendo s
 \[\overset{\underbrace{\text{\fbox{G}\fbox{A}\fbox{M}\fbox{E}}\cdots\text{\fbox{G}\fbox{A}\fbox{M}\fbox{E}}}}{\text{8 vezes}}\]
 \[\overset{\underbrace{\text{\fbox{G}\fbox{A}\fbox{M}\fbox{O}}\cdots\text{\fbox{G}\fbox{A}\fbox{M}\fbox{O}}}}{\text{8 vezes}}\]
 obtemos 
-\[\overset{\underbrace{\text{\fbox{G}\fbox{A}\fbox{M}\fbox{O}}\cdots\text{\fbox{G}\fbox{A}\fbox{M}\fbox{O}}}}{\text{8 vezes}}\] em 28779 iterações. Um ponto importante é que, sem o \textit{bound}, esse número se torna 174761, significantemente maior.
+\[\overset{\underbrace{\text{\fbox{G}\fbox{A}\fbox{T}\fbox{O}}\cdots\text{\fbox{G}\fbox{A}\fbox{T}\fbox{O}}}}{\text{4 vezes}}\overset{\underbrace{\text{\fbox{G}\fbox{A}\fbox{M}\fbox{E}}\cdots\text{\fbox{G}\fbox{A}\fbox{M}\fbox{E}}}}{\text{4 vezes}}\] em 42343 iterações\footnote{\textit{Sets} em Python não são determinísticos, então é possível que resultados diferentes apareçam, inclusive com um número de iterações diferente.}. Um ponto importante é que, sem o \textit{bound}, esse número se torna 174761, significantemente maior.
 
 A corretude do algoritmo é direta, pois é herdada do algoritmo da Tarefa 2 (que é exato) juntamente com a corretude do \textit{bound}, como discutido anteriormente. Porém, esse processo de \textit{bound} não garante que um número significativo de casos será eliminado: ainda, no pior caso, poderíamos passar por todos os nós.
 Note que nosso Algoritmo \ref{alg:tree} é essencialmente o Algoritmo \ref{alg:exact}, porém no formato de árvore (com recursões), além do fato de que são calculados os lower bounds. O cálculo do lower bound tem complexidade $O(mn + m)$\footnote{Para perceber isso, veja que a primeira parcela se refere ao custo atual até a posição $i$, enquanto a segunda parcela se refere ao lower bound a partir da posição $i+1$. Esse custo é linear, pois é possível ter os ``custos de cada posição'' previamente calculados. Para mais detalhes, por favor, conferir a implementação.}.
