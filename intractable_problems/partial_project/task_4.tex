@@ -1,0 +1,4 @@
+Suponhamos que temos a solução
+\[s = \text{\fbox{$s_1$}\fbox{$s_2$}$\cdots$\fbox{$s_{m-1}$}\fbox{$s_m$}}.\]
+Uma busca local bem simples, porém intuitiva e óbvia, é apagar aleatoriamente $r \le m$ letras e preencher a solução da melhor forma possível. São, ao todo, $|\Sigma|^r$ possibilidades, sendo que para checar cada uma toma-se tempo $O(mn+n) = O(mn)$, como descrito na Tarefa 2: $n$ cálculos da distância de Hamming, que tomam $O(m)$ cada uma, e o cálculo de um máximo ao final, que é feito em tempo linear $O(n)$.
+A implementação dessa busca local será feita na Tarefa 5, pois será utilizada na meta-heurística.
