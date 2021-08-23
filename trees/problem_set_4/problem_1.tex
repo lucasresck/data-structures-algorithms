@@ -1,0 +1,19 @@
+\textbf{Solução:}
+Iniciamos a busca pela maior chave com um ponteiro para a raiz. Logo após, tomamos o ponteiro à direita da última chave do nó. Repetimos esse processo, até que estejamos em uma folha. Na folha, tomamos a última chave do nó. Veja o Algoritmo \ref{alg:biggest}.
+
+\begin{algorithm}
+    \caption{Busca da maior chave em uma árvore B.}
+    \label{alg:biggest}
+    \begin{algorithmic}
+        \Procedure{maiorChave}{$x$}
+            \State $i \gets n[x]$ \Comment{$n[x]$ é o número de chaves do nó $x$}
+            \If{$\text{leaf}(x)$} \Comment{Caso $x$ seja uma folha}
+                \State \Return $\text{key}_{i-1}[x]$ \Comment{Retorna a última chave do nó}
+            \Else
+                \State \Return $\textsc{maiorChave}(c_i[x])$ \Comment{Maior chave na subárvore à direita da última chave}
+            \EndIf
+        \EndProcedure
+    \end{algorithmic}
+\end{algorithm}
+
+A corretude do algoritmo vem por indução. O que estamos fazendo é buscando a maior chave da subárvore que contém todas as chaves que são maiores do que as chaves da raiz; a chave que queremos precisa estar nessa subárvore. Após isso, repetimos o mesmo processo. Fazemos isso até que não tenhamos mais essa subárvore, e retornamos a maior chave do nó pai.
