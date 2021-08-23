@@ -1,0 +1,36 @@
+\textbf{Solução:}
+De início, assumo que a chave não necessariamente está armazenada na árvore.
+Vamos nos beneficiar do algoritmo de busca estudado em aula: suponha que tenhamos uma função $\textsc{b-tree-search}$ que toma um ponteiro a um nó $x$ e uma chave $k$ e retorna o (um ponteiro ao) nó $y$ em que a chave $k$ está ou deveria estar, caso estivesse armazenada.
+
+\begin{itemize}
+    \item Caso $k$ seja realmente esteja em $y$: o sucessor imediato de uma chave $k$ é, dentre as chaves que são maiores, aquela menor. Isso significa que, se tomarmos o ponteiro à direita da chave $k$, o sucessor imediato é o menor nó dessa subárvore. Quando não existe essa subárvore (isto é, o ponteiro aponta para NULL), pegamos simplesmente a próxima chave dentro do nó.
+    \item Caso $k$ não esteja em $y$: a subárvore que deveria conter $k$ não existe, isto é, o ponteiro aponta para NULL, como visto no algoritmo de busca. Logo, a solução aqui é simplesmente encontrar qual é o sucessor dentro do nó $y$. Caso não exista um sucessor, retornamos algo que indique o erro, por exemplo, \textit{None}.
+\end{itemize}
+
+O Algoritmo \ref{alg:successor} descreve esse procedimento. Note que usamos a função de busca estudada em aula e também uma função $\textsc{menorChave}$, análoga à função $\textsc{maiorChave}$ do Exercício 1.
+
+\begin{algorithm}
+    \caption{Sucessor imediato de uma chave em uma árvore B.}
+    \label{alg:successor}
+    \begin{algorithmic}
+        \Require Árvore $B$ (ponteiro à raiz), chave $k$
+        \State $y \gets \textsc{b-tree-search}(B, k)$ \Comment{Encontra o nó em que $k$ está, ou deveria estar}
+        \For{$0 \le i < n[y]$}
+            \If{$\text{key}_i[y] == k$} \Comment{Se $k$ está em $y$}
+                \If{$c_{i+1}[y]== \text{NULL}$} \Comment{Se não existe subárvore para buscar o menor elemento}
+                    \If{$i < n[y]-1$}
+                        \State \Return $\text{key}_{i+1}[y]$ \Comment{Retorna a próxima chave}
+                    \Else
+                        \State \Return \textit{None} \Comment{Não existe a chave sucessora}
+                    \EndIf
+                \Else
+                    \State \Return $\textsc{menorChave}(c_{i+1}[y])$ \Comment{Análoga a $\textsc{maiorChave}$ (Exercício 1)}
+                \EndIf
+            \EndIf
+            \If{$\text{key}_i[y] > k$} \Comment{$k$ não está em $y$, já retornamos a próxima chave}
+                \State \Return $\text{key}_i[y]$
+            \EndIf
+        \EndFor
+        \State \Return \textit{None} \Comment{Não há uma chave sucessora}
+    \end{algorithmic}
+\end{algorithm}
