@@ -78,7 +78,7 @@ class KDTree:
         Returns:
             bpq: bounded priority queue with the k-NN.
         '''
-        bpq = self.BoundedPriorityQueue(k)
+        bpq = BoundedPriorityQueue(k)
         self.knn_search(node, 0, self.tree, bpq)
         return bpq
 
@@ -114,18 +114,20 @@ class KDTree:
             if not bpq.full() or \
                 np.abs(node[dim] - subtree[1][dim]) < bpq.max_priority:
                 self.knn_search(node, (dim+1) % self.k, subtree[0], bpq)
-            
 
     def distance(self, node_1, node_2):
-        return np.linalg.norm(np.array(node_1), np.array(node_2))
+        return np.linalg.norm(np.array(node_1) - np.array(node_2))
 
 if __name__ == '__main__':
     tree = KDTree(2)
-    tree.add([3, 6])
-    tree.add([17, 15])
-    tree.add([13, 15])
-    tree.add([6, 12])
-    tree.add([9, 1])
-    tree.add([2, 7])
-    tree.add([10, 19])
+    tree.add([51, 75])
+    tree.add([25, 40])
+    tree.add([70, 70])
+    tree.add([10, 30])
+    tree.add([35, 90])
+    tree.add([55, 1])
+    tree.add([60, 80])
+    tree.add([1, 10])
+    tree.add([50, 50])
     print(tree.tree)
+    print(tree.knn([52, 52], 3).queue)
