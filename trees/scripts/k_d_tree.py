@@ -1,3 +1,21 @@
+from queue import PriorityQueue
+import numpy as np
+
+class BoundedPriorityQueue(PriorityQueue):
+    def __init__(self, k):
+        super().__init__(k)
+        self.max_priority = 0
+
+    def put_item(self, node,  priority):
+        if not self.full():
+            self.put((-priority, node))
+            if priority > self.max_priority:
+                self.max_priority = priority
+        else:
+            if priority < self.max_priority:
+                self.get()
+                self.put((-priority, node))
+
 class KDTree:
     def __init__(self, k):
         self.tree = []
