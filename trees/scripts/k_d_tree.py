@@ -37,6 +37,7 @@ class BoundedPriorityQueue(PriorityQueue):
             if priority < self.max_priority:
                 self.get()
                 self.put((-priority, node))
+                self.max_priority = priority
 
 class KDTree:
     '''k-d tree implementation.'''
@@ -49,10 +50,11 @@ class KDTree:
         
         Args:
             node: node to be added.
-            dim: which dim to be compared. By default, it starts with dim 0 at
-                root node and increases by one for each level of the tree.
+            dim: in which dim to be compared. By default, it starts with dim 0
+                at root node and increases by one for each level of the tree.
             subtree: optional; in which subtree to add the node. By standard,
-                it is the tree itself.'''
+                it is the tree itself.
+        '''
         if subtree is None:
             subtree = self.tree
         if not len(subtree):
@@ -65,6 +67,57 @@ class KDTree:
 
     def create_node(self, node):
         return [[], node, []]
+
+    def knn(self, node, k):
+        '''Search for the k nearest neighbors.
+        
+        Args:
+            node: which node to search for the neighbors of.
+            k: how many neighbors.
+
+        Returns:
+            bpq: bounded priority queue with the k-NN.
+        '''
+        bpq = self.BoundedPriorityQueue(k)
+        self.knn_search(node, 0, self.tree, bpq)
+        return bpq
+
+    def knn_search(self, node, dim, subtree, bpq):
+        '''k-NN recursion search.
+        
+        It searchs for k-NN in both left and right subtrees, but it won't when
+        the entire subtree is not worth it, that is, it is not possible to have
+        any nearest node.
+        
+        Args:
+            node: which node to search for the neighbors of.
+            dim: in which dim to be compared. By default, it starts with dim 0
+                at root node and increases by one for each level of the tree.
+            subtree: in which subtree to add the node.
+            bpq: bounded priority queue.
+        '''
+        # If the subtree is empty
+        if not len(subtree):
+            return
+
+        bpq.put_item(subtree[1], self.distance(node, subtree[1]))
+
+        if node[dim] < subtree[1][dim]:
+            # Recursively search the left subtree
+            self.knn_search(node, (dim+1) % self.k, subtree[0], bpq)
+            # If it is worth it to search the other subtree
+            if not bpq.full() or \
+                np.abs(node[dim] - subtree[1][dim]) < bpq.max_priority:
+                self.knn_search(node, (dim+1) % self.k, subtree[2], bpq)
+        else:
+            self.knn_search(node, (dim+1) % self.k, subtree[2], bpq)
+            if not bpq.full() or \
+                np.abs(node[dim] - subtree[1][dim]) < bpq.max_priority:
+                self.knn_search(node, (dim+1) % self.k, subtree[0], bpq)
+            
+
+    def distance(self, node_1, node_2):
+        pass
 
 if __name__ == '__main__':
     tree = KDTree(2)
