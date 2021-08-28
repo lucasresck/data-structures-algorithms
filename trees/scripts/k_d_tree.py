@@ -117,7 +117,7 @@ class KDTree:
             
 
     def distance(self, node_1, node_2):
-        pass
+        return np.linalg.norm(np.array(node_1), np.array(node_2))
 
 if __name__ == '__main__':
     tree = KDTree(2)
