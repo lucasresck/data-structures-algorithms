@@ -11,3 +11,8 @@
 *.blg
 *.bcf
 *.run.xml
+
+# Python
+
+*.pyc
+__pycache__/*
