@@ -80,7 +80,10 @@ class KDTree:
         '''
         bpq = BoundedPriorityQueue(k)
         self.knn_search(node, 0, self.tree, bpq)
-        return bpq
+        nodes = []
+        while not bpq.empty():
+            nodes.append(bpq.get()[1])
+        return nodes[::-1]
 
     def knn_search(self, node, dim, subtree, bpq):
         '''k-NN recursion search.
