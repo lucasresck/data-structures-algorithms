@@ -1,7 +1,61 @@
 \section{Cenário de uso}
 
-    \subsection{Dataset}
+    O cenário de uso da nossa implementação consiste em:
+    \begin{itemize}
+        \item dada a localização do fiscal, indicar o hospital mais próximo;
+        \item dado o hospital, indicar os $x$ pacientes mais similares parecidos ao informado.
+    \end{itemize}
+    Para isso, precisamos criar um \textit{dataset} com essas informações.
+
+    Toda a preparação do cenário de uso, incluindo a geração do \textit{dataset}, podem ser visualizadas \href{https://nbviewer.jupyter.org/github/lucasresck/data-structures-algorithms/blob/main/notebooks/k_d_tree.ipynb}{neste \textit{Jupyter notebook}}. O \textit{dataset}, por sua vez, pode ser consultado \href{https://github.com/lucasresck/data-structures-algorithms/blob/main/data/hospitals.json}{neste arquivo JSON}.
+
+    \subsection{\textit{Dataset}}
+
+        Nosso \textit{dataset} contém 10 hospitais, com 7 pacientes cada. Por facilidade, cada hospital possui uma localização aleatória dentro de um quadrado unitário, e cada paciente possui características aleatórias dentro dos limites informados no enunciado.
+        Veja, por exemplo, o início do arquivo JSON gerado:
+        \begin{alltt}
+\{
+    "hospitais": [
+        \{
+            "localização": [
+                0.62,
+                0.61
+            ],
+            "pacientes": [
+                \{
+                    "peso": 91,
+                    "idade": 29,
+                    "saturação": 90
+                \},
+                \{
+                    "peso": 111,
+                    "idade": 75,
+                    "saturação": 100
+                \}, ...
+        \end{alltt}
+        Cada hospital é um objeto que contém sua localização e uma lista de seus pacientes; o \textit{dataset}, portanto, é uma lista desses hospitais.
 
     \subsection{Hospital mais próximo}
+
+        Suponhamos que o fiscal esteja na posição $(0.5, 0.5)$ do quadrado unitário. A \autoref{fig:points} mostra a localização dos hospitais e do fiscal.
+        \begin{figure}[H]
+            \centering
+            \includegraphics[width=0.6\textwidth]{points.pdf}
+            \caption{Localização dos hospitais (em azul) e do fiscal (em laranja).}
+            \label{fig:points}
+        \end{figure}
+        Depois de montarmos a árvore k-d utilizando a localização dos hospitais como nó, realizamos uma busca k-NN com $k$ igual a 1 para encontrarmos o hospital mais próximo. A saída do algoritmo é
+        \begin{alltt}
+[\{'node': [0.56, 0.53],
+  'metadata': \{'localização': [0.56, 0.53],
+   'pacientes': [\{'peso': 98, 'idade': 50, 'saturação': 98\},
+    \{'peso': 129, 'idade': 81, 'saturação': 98\},
+    \{'peso': 59, 'idade': 85, 'saturação': 99\},
+    \{'peso': 72, 'idade': 54, 'saturação': 86\},
+    \{'peso': 121, 'idade': 15, 'saturação': 90\},
+    \{'peso': 96, 'idade': 64, 'saturação': 89\},
+    \{'peso': 46, 'idade': 30, 'saturação': 95\}]\}\}]
+        \end{alltt}
+        Encontramos o hospital localizado no ponto $(0.56, 0.53)$, realmente o ponto mais próximo na \autoref{fig:points}. Além disso, pelo fato de que nossa implementação permite o armazenamento de metadados, temos também todas as informações desse hospital, incluindo a lista de pacientes e suas características.
 
     \subsection{Pacientes mais parecidos}
