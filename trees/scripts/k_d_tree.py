@@ -45,7 +45,7 @@ class KDTree:
         self.tree = []
         self.k = k
 
-    def add(self, node, dim=0, subtree=None):
+    def add(self, node, dim=0, subtree=None, metadata=None):
         '''Add a node to the tree.
         
         Args:
@@ -54,19 +54,20 @@ class KDTree:
                 at root node and increases by one for each level of the tree.
             subtree: optional; in which subtree to add the node. By standard,
                 it is the tree itself.
+            metadata: optional; node metadata.
         '''
         if subtree is None:
             subtree = self.tree
         if not len(subtree):
-            subtree.extend(self.create_node(node))
+            subtree.extend(self.create_node(node, metadata))
         else:
-            if node[dim] < subtree[1][dim]:
-                self.add(node, (dim+1) % self.k, subtree[0])
+            if node[dim] < subtree[1]['node'][dim]:
+                self.add(node, (dim+1) % self.k, subtree[0], metadata)
             else:
-                self.add(node, (dim+1) % self.k, subtree[2])
+                self.add(node, (dim+1) % self.k, subtree[2], metadata)
 
-    def create_node(self, node):
-        return [[], node, []]
+    def create_node(self, node, metadata):
+        return [[], {'node': node, 'metadata': metadata}, []]
 
     def knn(self, node, k):
         '''Search for the k nearest neighbors.
@@ -103,19 +104,19 @@ class KDTree:
         if not len(subtree):
             return
 
-        bpq.put_item(subtree[1], self.distance(node, subtree[1]))
+        bpq.put_item(subtree[1], self.distance(node, subtree[1]['node']))
 
-        if node[dim] < subtree[1][dim]:
+        if node[dim] < subtree[1]['node'][dim]:
             # Recursively search the left subtree
             self.knn_search(node, (dim+1) % self.k, subtree[0], bpq)
             # If it is worth it to search the other subtree
             if not bpq.full() or \
-                np.abs(node[dim] - subtree[1][dim]) < bpq.max_priority:
+                np.abs(node[dim] - subtree[1]['node'][dim]) < bpq.max_priority:
                 self.knn_search(node, (dim+1) % self.k, subtree[2], bpq)
         else:
             self.knn_search(node, (dim+1) % self.k, subtree[2], bpq)
             if not bpq.full() or \
-                np.abs(node[dim] - subtree[1][dim]) < bpq.max_priority:
+                np.abs(node[dim] - subtree[1]['node'][dim]) < bpq.max_priority:
                 self.knn_search(node, (dim+1) % self.k, subtree[0], bpq)
 
     def distance(self, node_1, node_2):
