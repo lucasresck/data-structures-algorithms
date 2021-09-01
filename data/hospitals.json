@@ -1,0 +1,434 @@
+{
+    "hospitais": [
+        {
+            "localização": [
+                0.62,
+                0.61
+            ],
+            "pacientes": [
+                {
+                    "peso": 91,
+                    "idade": 29,
+                    "saturação": 90
+                },
+                {
+                    "peso": 111,
+                    "idade": 75,
+                    "saturação": 100
+                },
+                {
+                    "peso": 122,
+                    "idade": 89,
+                    "saturação": 90
+                },
+                {
+                    "peso": 127,
+                    "idade": 38,
+                    "saturação": 82
+                },
+                {
+                    "peso": 61,
+                    "idade": 67,
+                    "saturação": 81
+                },
+                {
+                    "peso": 127,
+                    "idade": 44,
+                    "saturação": 85
+                },
+                {
+                    "peso": 41,
+                    "idade": 78,
+                    "saturação": 100
+                }
+            ]
+        },
+        {
+            "localização": [
+                0.81,
+                0.3
+            ],
+            "pacientes": [
+                {
+                    "peso": 128,
+                    "idade": 63,
+                    "saturação": 89
+                },
+                {
+                    "peso": 99,
+                    "idade": 29,
+                    "saturação": 94
+                },
+                {
+                    "peso": 101,
+                    "idade": 65,
+                    "saturação": 91
+                },
+                {
+                    "peso": 94,
+                    "idade": 78,
+                    "saturação": 82
+                },
+                {
+                    "peso": 90,
+                    "idade": 21,
+                    "saturação": 100
+                },
+                {
+                    "peso": 112,
+                    "idade": 53,
+                    "saturação": 97
+                },
+                {
+                    "peso": 43,
+                    "idade": 74,
+                    "saturação": 93
+                }
+            ]
+        },
+        {
+            "localização": [
+                0.4,
+                0.93
+            ],
+            "pacientes": [
+                {
+                    "peso": 92,
+                    "idade": 16,
+                    "saturação": 99
+                },
+                {
+                    "peso": 99,
+                    "idade": 85,
+                    "saturação": 91
+                },
+                {
+                    "peso": 47,
+                    "idade": 61,
+                    "saturação": 82
+                },
+                {
+                    "peso": 117,
+                    "idade": 50,
+                    "saturação": 97
+                },
+                {
+                    "peso": 43,
+                    "idade": 16,
+                    "saturação": 85
+                },
+                {
+                    "peso": 93,
+                    "idade": 18,
+                    "saturação": 97
+                },
+                {
+                    "peso": 129,
+                    "idade": 58,
+                    "saturação": 81
+                }
+            ]
+        },
+        {
+            "localização": [
+                0.2,
+                0.71
+            ],
+            "pacientes": [
+                {
+                    "peso": 87,
+                    "idade": 29,
+                    "saturação": 87
+                },
+                {
+                    "peso": 117,
+                    "idade": 76,
+                    "saturação": 87
+                },
+                {
+                    "peso": 124,
+                    "idade": 67,
+                    "saturação": 92
+                },
+                {
+                    "peso": 80,
+                    "idade": 43,
+                    "saturação": 94
+                },
+                {
+                    "peso": 84,
+                    "idade": 79,
+                    "saturação": 86
+                },
+                {
+                    "peso": 48,
+                    "idade": 15,
+                    "saturação": 91
+                },
+                {
+                    "peso": 47,
+                    "idade": 77,
+                    "saturação": 90
+                }
+            ]
+        },
+        {
+            "localização": [
+                0.72,
+                0.24
+            ],
+            "pacientes": [
+                {
+                    "peso": 74,
+                    "idade": 47,
+                    "saturação": 84
+                },
+                {
+                    "peso": 80,
+                    "idade": 42,
+                    "saturação": 86
+                },
+                {
+                    "peso": 112,
+                    "idade": 86,
+                    "saturação": 91
+                },
+                {
+                    "peso": 73,
+                    "idade": 47,
+                    "saturação": 95
+                },
+                {
+                    "peso": 62,
+                    "idade": 76,
+                    "saturação": 84
+                },
+                {
+                    "peso": 83,
+                    "idade": 49,
+                    "saturação": 80
+                },
+                {
+                    "peso": 86,
+                    "idade": 17,
+                    "saturação": 80
+                }
+            ]
+        },
+        {
+            "localização": [
+                0.16,
+                0.93
+            ],
+            "pacientes": [
+                {
+                    "peso": 53,
+                    "idade": 41,
+                    "saturação": 88
+                },
+                {
+                    "peso": 118,
+                    "idade": 29,
+                    "saturação": 89
+                },
+                {
+                    "peso": 116,
+                    "idade": 65,
+                    "saturação": 86
+                },
+                {
+                    "peso": 91,
+                    "idade": 18,
+                    "saturação": 84
+                },
+                {
+                    "peso": 62,
+                    "idade": 29,
+                    "saturação": 90
+                },
+                {
+                    "peso": 68,
+                    "idade": 50,
+                    "saturação": 92
+                },
+                {
+                    "peso": 71,
+                    "idade": 85,
+                    "saturação": 98
+                }
+            ]
+        },
+        {
+            "localização": [
+                0.48,
+                0.69
+            ],
+            "pacientes": [
+                {
+                    "peso": 84,
+                    "idade": 76,
+                    "saturação": 100
+                },
+                {
+                    "peso": 45,
+                    "idade": 42,
+                    "saturação": 91
+                },
+                {
+                    "peso": 83,
+                    "idade": 44,
+                    "saturação": 90
+                },
+                {
+                    "peso": 128,
+                    "idade": 76,
+                    "saturação": 80
+                },
+                {
+                    "peso": 40,
+                    "idade": 41,
+                    "saturação": 99
+                },
+                {
+                    "peso": 116,
+                    "idade": 17,
+                    "saturação": 86
+                },
+                {
+                    "peso": 109,
+                    "idade": 86,
+                    "saturação": 88
+                }
+            ]
+        },
+        {
+            "localização": [
+                0.35,
+                0.63
+            ],
+            "pacientes": [
+                {
+                    "peso": 83,
+                    "idade": 38,
+                    "saturação": 94
+                },
+                {
+                    "peso": 98,
+                    "idade": 46,
+                    "saturação": 88
+                },
+                {
+                    "peso": 91,
+                    "idade": 76,
+                    "saturação": 96
+                },
+                {
+                    "peso": 97,
+                    "idade": 66,
+                    "saturação": 91
+                },
+                {
+                    "peso": 78,
+                    "idade": 16,
+                    "saturação": 82
+                },
+                {
+                    "peso": 95,
+                    "idade": 73,
+                    "saturação": 96
+                },
+                {
+                    "peso": 41,
+                    "idade": 16,
+                    "saturação": 84
+                }
+            ]
+        },
+        {
+            "localização": [
+                0.7,
+                0.86
+            ],
+            "pacientes": [
+                {
+                    "peso": 41,
+                    "idade": 67,
+                    "saturação": 91
+                },
+                {
+                    "peso": 129,
+                    "idade": 46,
+                    "saturação": 85
+                },
+                {
+                    "peso": 71,
+                    "idade": 82,
+                    "saturação": 90
+                },
+                {
+                    "peso": 95,
+                    "idade": 31,
+                    "saturação": 85
+                },
+                {
+                    "peso": 63,
+                    "idade": 83,
+                    "saturação": 99
+                },
+                {
+                    "peso": 109,
+                    "idade": 25,
+                    "saturação": 95
+                },
+                {
+                    "peso": 55,
+                    "idade": 87,
+                    "saturação": 85
+                }
+            ]
+        },
+        {
+            "localização": [
+                0.56,
+                0.53
+            ],
+            "pacientes": [
+                {
+                    "peso": 98,
+                    "idade": 50,
+                    "saturação": 98
+                },
+                {
+                    "peso": 129,
+                    "idade": 81,
+                    "saturação": 98
+                },
+                {
+                    "peso": 59,
+                    "idade": 85,
+                    "saturação": 99
+                },
+                {
+                    "peso": 72,
+                    "idade": 54,
+                    "saturação": 86
+                },
+                {
+                    "peso": 121,
+                    "idade": 15,
+                    "saturação": 90
+                },
+                {
+                    "peso": 96,
+                    "idade": 64,
+                    "saturação": 89
+                },
+                {
+                    "peso": 46,
+                    "idade": 30,
+                    "saturação": 95
+                }
+            ]
+        }
+    ]
+}
