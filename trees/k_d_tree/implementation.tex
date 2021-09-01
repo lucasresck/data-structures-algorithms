@@ -1,6 +1,35 @@
 \section{Implementação}
 
-    \subsection{k-d tree}
+    Toda a implementação da \textit{k-d tree} e da \textit{bounded priority queue} foram realizadas em \textit{Python}, podendo ser conferidas \href{https://github.com/lucasresck/data-structures-algorithms/blob/main/trees/scripts/k_d_tree.py}{neste link}.
+
+    \subsection{\textit{k-d tree}}
+
+        A \textit{k-d tree}, implementada em \textit{Python}, é construída utilizando listas aninhadas. Cada lista guarda três elementos: a subárvore da esquerda (uma lista), o nó (um dicionário) e a subárvore da direita (outra lista). Por exemplo, adicionado os nós $(51, 75)$ e $(25, 40)$, nessa ordem, a árvore fica        
+        \begin{Verbatim}[commandchars=\\\{\}]
+[\textcolor{blue}{[[], {'node': [25, 40], 'metadata': None}, []]}, {'node': [51, 75], 'metadata': None}, []]
+        \end{Verbatim}
+        Ou seja, $(51, 75)$ é a raiz e $(25, 40)$ é a raiz da subárvore esquerda (em azul).
+
+        A implementação permite a inserção de metadados, que ficam armazenados no dicionário do nó sob a chave \textit{metadata}, algo que é importante para nosso cenário de uso.
+        
+        O cálculo da distância entre dois pontos é calculado da forma tradicional, utilizando a distância euclideana. 
+        A função para adicionar novos nós é análoga à teoria, adicionando os nós de forma recursiva na subárvore correspondente, até que se atinja uma folha e efetivamente se adicione o nó na árvore. O k-NN também é análogo à teoria, buscando os $k$ vizinhos mais próximos nas duas subárvores, porém descartando aquelas subárvore onde não é possível ter um vizinho mais próximo. Quando $k > 1$, é necessário guardar os melhores candidatos a vizinhos mais próximos em uma \textit{bounded priority queue}, detalhada na \autoref{sec:bpq}.
 
     \subsection{Bounded priority queue}
-    
+        \label{sec:bpq}
+
+        Por padrão, o \textit{Python} já possui uma implementação de \textit{priority queue} (\lstinline{PriorityQueue}, do pacote \lstinline{queue}), que podemos utilizar para simplificar a implementação da nossa \textit{bounded priority queue}. Na nossa implementação, os elementos são armazenados da forma (prioridade, elemento).
+        
+        Nossa classe \lstinline{BoundedPriorityQueue} herda da classe \lstinline{PriorityQueue} e a extende de tal forma que, quando o número máximo de elementos é atingido, novos elementos só são adicionados quando têm maior prioridade. Isso é feito mantendo salvo o valor da prioridade máxima. Veja um \textit{snippet} do código para adicionar um novo elemento:
+        \begin{lstlisting}[language=Python]
+if not self.full():
+    self.put((-priority, node))
+    if priority > self.max_priority:
+        self.max_priority = priority
+else:
+    if priority < self.max_priority:
+        self.get()
+        self.put((-priority, node))
+        self.max_priority = priority
+        \end{lstlisting}
+        Outra modificação é que, na nossa aplicação, um nó vizinho com alta prioridade é aquele que está próximo do nó que está sendo buscado, ou seja, menores distâncias têm maior prioridade. Como usamos a distância como prioridade, multiplicamos a prioridade por $-1$.
