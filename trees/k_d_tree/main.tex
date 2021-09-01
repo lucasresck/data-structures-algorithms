@@ -1,0 +1,56 @@
+\documentclass{article}
+
+% Language setting
+% Replace `english' with e.g. `spanish' to change the document language
+\usepackage[portuguese]{babel}
+
+% Set page size and margins
+% Replace `letterpaper' with`a4paper' for UK/EU standard size
+\usepackage[a4paper,top=2cm,bottom=2cm,left=3cm,right=3cm,marginparwidth=1.75cm]{geometry}
+
+% Useful packages
+\usepackage{amsmath}
+\usepackage{graphicx}
+\usepackage[colorlinks=true, allcolors=blue]{hyperref}
+\usepackage{float}
+\usepackage{algorithm}
+\usepackage{algpseudocode}
+
+\graphicspath{{images/}}
+
+\title{Árvore k-d}
+\author{Lucas Emanuel Resck Domingues \\ \\
+Estruturas de Dados e Algoritmos \\
+Professor: Jean Roberto Ponciano}
+
+\begin{document}
+
+    \maketitle
+
+    \section{Enunciado}
+
+    A Secretaria de Saúde do seu município acaba de te contratar para ajudá-los em um
+    problema. Você precisa oferecer um meio de repassar, para um fiscal dessa secretaria que
+    circula pela cidade, as informações dos pacientes que possuem características parecidas
+    com as que ele está procurando e que estão sendo atendidos no hospital mais próximo a
+    ele. Com essa informação, ele poderá ir ao hospital e, se for preciso, tomar decisões
+    importantes em relação à saúde pública da cidade.
+    
+    A implementação da sua ideia depende de algumas informações:
+    \begin{enumerate}
+        \item Você precisa saber qual é o hospital de interesse (qual é o hospital mais próximo de onde o fiscal está?)
+        \item As características importantes para o fiscal são o peso do paciente (40kg a 130kg), idade (15 a 90 anos) e nível de saturação (80\% a 100\%). Ele informará os valores para esses parâmetros e você deve identificar os $x$ pacientes que melhor se encaixam neles.
+        \item O fiscal informará a quantidade de pacientes que interessa a ele ($1 \le x \le 6$) e você os exibirá em ordem do mais semelhante ao menos semelhante. Por conveniência, você pode assumir que, qualquer que seja o hospital, há sempre 7 pacientes ou mais em atendimento.
+    \end{enumerate}
+
+    Mão na massa:
+    \begin{enumerate}
+        \item Você deve resolver este problema utilizando duas árvores k-d.
+        \item Você não pode utilizar implementações prontas de bibliotecas como a Scikit-learn.
+        \item Você pode implementar em qualquer linguagem de programação.
+        \item Crie um dataset com, no mínimo, 10 hospitais. Embora estejamos assumindo um     contexto local (município), para facilitar você pode escolher localizações como se os hospitais estivessem em cidades, estados ou países diferentes.
+        \item Crie um dataset com ao menos 7 pacientes para cada hospital. Você pode usar valores aleatórios dentro dos intervalos mencionados anteriormente, mas é importante salvar o arquivo para compararmos o resultado obtido com os valores do dataset.
+        \item Atente-se à medida de distância que você usará.
+    \end{enumerate}
+
+\end{document}
