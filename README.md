@@ -56,5 +56,3 @@ The main effect is the empty cells on the image border.
 De Berg, Mark, et al. "Computational geometry." Computational geometry. Springer, Berlin, Heidelberg, 1997.
 
 [Matt Brubeck](https://github.com/mbrubeck/)'s "[Fortune's Algorithm in C++](https://www.cs.hmc.edu/~mbrubeck/voronoi.html)".
-The result will be the Voronoi diagram constructed from the sampled pixels.
-
