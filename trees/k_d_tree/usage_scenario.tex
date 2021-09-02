@@ -37,6 +37,7 @@
         Cada hospital é um objeto que contém sua localização e uma lista de seus pacientes; o \textit{dataset}, portanto, é uma lista desses hospitais.
 
     \subsection{Hospital mais próximo}
+        \label{sec:nearest_hospital}
 
         Suponhamos que o fiscal esteja na posição $(0.5, 0.5)$ do quadrado unitário. A \autoref{fig:points} mostra a localização dos hospitais e do fiscal.
         \begin{figure}[H]
@@ -45,7 +46,7 @@
             \caption{Localização dos hospitais (em azul) e do fiscal (em laranja).}
             \label{fig:points}
         \end{figure}
-        Depois de montarmos a árvore k-d utilizando a localização dos hospitais como nó, realizamos uma busca k-NN com $k$ igual a 1 para encontrarmos o hospital mais próximo. A saída do algoritmo é
+        Depois de montarmos a árvore k-d com dimensão $k=2$ utilizando a localização dos hospitais como nó, realizamos uma busca k-NN com $k$ igual a 1 para encontrarmos o hospital mais próximo. A saída do algoritmo é
         \begin{alltt}
 [\{'node': [0.56, 0.53],
   'metadata': \{'localização': [0.56, 0.53],
@@ -60,3 +61,20 @@
         Encontramos o hospital localizado no ponto $(0.56, 0.53)$, realmente o ponto mais próximo na \autoref{fig:points}. Além disso, pelo fato de que nossa implementação permite o armazenamento de metadados, temos também todas as informações desse hospital, incluindo a lista de pacientes e suas características.
 
     \subsection{Pacientes mais parecidos}
+
+        Suponhamos que as características dos pacientes do hospital mais próximo (\autoref{sec:nearest_hospital}) são adicionadas em uma nova k-d tree, de dimensão $k=3$, sem nenhum tratamento. Quando fôssemos buscar os vizinhos mais próximos utilizando a distância euclidiana, teríamos, estaríamos priorizando algumas características em relação em outras, neste caso aquelas características com maior valor absoluto. Por exemplo, uma pessoa com saturação 80\% é completamente diferente de uma com saturação 100\%, porém, em valor absoluto, isso equivale à diferença de peso entre uma pessoa de 80 kg e 100 kg, que são parecidas neste contexto. Para evitar priorizar características, antes de inserirmos os pacientes na árvore normalizamos as \textit{features} para valores entre 0 e 1, utilizando a seguinte função:
+        \begin{lstlisting}[language=Python]
+def normalize(weight, age, saturation):
+    return (weight-40)/90, (age-15)/75, (saturation-80)/20
+        \end{lstlisting}
+
+        Tendo a árvore k-d montada utilizando as características normalizadas, podemos consultar os pacientes mais similares. Por exemplo, suponha que o fiscal esteja buscando os três pacientes mais similares àquele com as seguintes características: peso 46 kg, idade 30 e saturação 96\%. Utilizando uma busca k-NN, com $x = 3$, temos a seguinte saída:
+        \begin{alltt}
+[\{'node': [0.06666666666666667, 0.2, 0.75],
+  'metadata': \{'peso': 46, 'idade': 30, 'saturação': 95\}\},
+ \{'node': [0.6444444444444445, 0.4666666666666667, 0.9],
+  'metadata': \{'peso': 98, 'idade': 50, 'saturação': 98\}\},
+ \{'node': [0.35555555555555557, 0.52, 0.3],
+  'metadata': \{'peso': 72, 'idade': 54, 'saturação': 86\}\}]
+        \end{alltt}
+        Isto é, o paciente mais parecido tem as mesmas características, com exceção da saturação, que variou em 1\% (46 kg, 30 anos e 95\%). Nessa saída do algoritmo, podemos observar que as chaves nos nós foram armazenadas no formato normalizado.
